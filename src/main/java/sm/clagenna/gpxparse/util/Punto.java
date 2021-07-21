@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import lombok.Getter;
+
 public class Punto implements Serializable {
 
   /** long serialVersionUID */
@@ -40,15 +42,15 @@ public class Punto implements Serializable {
 
   /** eath radius at equator ( in meter) */
   @SuppressWarnings("unused") private static double s_earthRadius_equa = 6_378_100F;
-  private static double                             s_earthRadius_mean = 6_371_008.7714F;
+  @SuppressWarnings("unused") private static double s_earthRadius_mean = 6_371_008.7714F;
   @SuppressWarnings("unused") private static double s_earthRadius_pola = 6_356_800F;
 
   private static final Map<EGpxFmt, Pattern>        s_map;
 
-  private double                                    lat;
-  private double                                    lon;
-  private double                                    latR;
-  private double                                    lonR;
+  @Getter private double                            lat;
+  @Getter private double                            lon;
+  @Getter private double                            latR;
+  @Getter private double                            lonR;
 
   static {
     s_map = new HashMap<Punto.EGpxFmt, Pattern>();
@@ -151,16 +153,24 @@ public class Punto implements Serializable {
     double dlon = p_pu.getLonR() - lonR;
     double dlat = p_pu.getLatR() - latR;
     double a = Math.pow(Math.sin(dlat / 2), 2) //
-        + Math.cos(latR) * Math.cos(p_pu.getLatR()) // 
+        + Math.cos(latR) * Math.cos(p_pu.getLatR()) //
             * Math.pow(Math.sin(dlon / 2), 2);
 
     double c = 2 * Math.asin(Math.sqrt(a));
     dd = (c * s_earthRadius_mean);
     return dd;
   }
-
-  public double getLat() {
-    return lat;
+  
+  public double dist2( Punto p_pu) {
+    double theta = lonR - p_pu.getLonR();
+    double dist = Math.sin(latR) * Math.sin(p_pu.getLatR()) //
+        + Math.cos(latR) * Math.cos(p_pu.getLatR()) //
+        * Math.cos(theta);
+    dist = Math.acos(dist);
+    dist = Math.toDegrees(dist);
+    dist = dist * 60 * 1.1515;
+    dist = dist * 1609.344;
+    return (dist);
   }
 
   public void setLat(double p_lat) {
@@ -168,26 +178,14 @@ public class Punto implements Serializable {
     latR = lat / 180f * Math.PI;
   }
 
-  public double getLon() {
-    return lon;
-  }
-
   public void setLon(double p_lon) {
     lon = p_lon;
     lonR = lon / 180f * Math.PI;
   }
 
-  public double getLatR() {
-    return latR;
-  }
-
   public void setLatR(double p_latR) {
     latR = p_latR;
     lat = latR / Math.PI * 180F;
-  }
-
-  public double getLonR() {
-    return lonR;
   }
 
   public void setLonR(double p_lonR) {

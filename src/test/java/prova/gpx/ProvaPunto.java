@@ -26,6 +26,7 @@ public class ProvaPunto {
     Punto rif = new Punto(41.40338F, 2.17403F);
     Punto rif2 = new Punto(41.40338134765625F, 2.174030065536499F);
     double dist = rif.distance(rif2);
+    double dist2 = 0;
     System.out.printf("Fra rif e rif2  dist=%.6f\n", dist);
 
     for (String sz : s_arrTest) {
@@ -38,6 +39,14 @@ public class ProvaPunto {
       }
       System.out.printf(" per %s \t = %s\n", sz, pu.toString());
     }
+
+    Punto casa = new Punto(43.96137542929274, 12.464898256338145);
+    Punto pizz = new Punto(43.967460844196076, 12.475562892576562);
+    // da google 1.08
+    dist = casa.distance(pizz);
+    dist2 = casa.dist2(pizz);
+    System.out.printf("Da casa a pizz  (1080m) dist=%.2f m\n", dist);
+    System.out.printf("Da casa a pizz2 (1080m) dist=%.2f m\n", dist2);
 
   }
 
