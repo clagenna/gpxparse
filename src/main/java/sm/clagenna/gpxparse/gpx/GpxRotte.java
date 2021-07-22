@@ -24,6 +24,25 @@ public class GpxRotte implements IGpxGest {
   private GpxRottaPunti                                   rottaPunti;
   private List<GpxRottaPunti>                             m_liRottaPunti;
 
+  /**
+   * Deve convertire un punto gpxx:rpt in<br/>
+   * <code>... xmlsnip....</code>
+   * 
+   * <pre>
+   * ------------------------------------------------------------------
+   *         &lt;/gpxx:RoutePointExtension&gt;
+          &lt;/extensions&gt;
+        &lt;/rtept&gt;
+        &lt;rtept lat="43.929970264434814" lon="12.324879169464111"&gt;
+          &lt;time&gt;2021-07-22T13:04:09Z&lt;/time&gt;
+          &lt;name&gt;Strada Provinciale Marecchia e Strada&lt;/name&gt;
+          &lt;sym&gt;Waypoint&lt;/sym&gt;
+          &lt;extensions&gt;
+            &lt;trp:ShapingPoint /&gt;
+            &lt;gpxx:RoutePointExtension&gt;
+   * ------------------------------------------------------------------
+   * </pre>
+   */
   public GpxRotte() {
     //
   }

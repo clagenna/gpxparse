@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Spliterators;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -75,28 +78,10 @@ public class XmlHandler extends DefaultHandler {
   }
 
   private String getXpath() {
-    String szRet = null;
-    if (m_stack == null)
-      return szRet;
-    for (String key : m_stack) {
-      if (szRet == null)
-        szRet = key;
-      else
-        szRet = key + "/" + szRet;
-    }
-    return szRet;
-  }
-
-  @SuppressWarnings("unused")
-  private String getXpathX() {
-    String szRet = "";
-    Iterator<String> it = m_stack.iterator();
-    while (it.hasNext()) {
-      if (szRet.length() > 0)
-        szRet += "/";
-      szRet += it.next();
-    }
-    return szRet;
+    Iterator<String> iter = m_stack.descendingIterator();
+    String sz = StreamSupport.stream(Spliterators.spliteratorUnknownSize(iter, 0), false) //
+        .collect(Collectors.joining("/"));
+    return sz;
   }
 
   private Map<String, String> parseAttributes(Attributes attributes) {

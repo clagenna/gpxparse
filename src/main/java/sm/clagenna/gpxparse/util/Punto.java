@@ -1,6 +1,7 @@
 package sm.clagenna.gpxparse.util;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -35,6 +36,8 @@ public class Punto implements Serializable {
   private static final String CSZ_DEC_BNE      = "N([0-9.]+),E([0-9.]+)";
   // Decimal degrees (DD): 41.40338, 2.17403
   private static final String CSZ_DD           = "([0-9.]+),([0-9.]+)";
+  
+  private static final DecimalFormat s_decFmt = new DecimalFormat("##.000000000000000");
 
   private enum EGpxFmt {
     dms_nea, dms_bne, dms_ena, dms_ben, dec_ben, dec_ena, dec_nea, dec_bne, dd
@@ -160,12 +163,12 @@ public class Punto implements Serializable {
     dd = (c * s_earthRadius_mean);
     return dd;
   }
-  
-  public double dist2( Punto p_pu) {
+
+  public double dist2(Punto p_pu) {
     double theta = lonR - p_pu.getLonR();
     double dist = Math.sin(latR) * Math.sin(p_pu.getLatR()) //
         + Math.cos(latR) * Math.cos(p_pu.getLatR()) //
-        * Math.cos(theta);
+            * Math.cos(theta);
     dist = Math.acos(dist);
     dist = Math.toDegrees(dist);
     dist = dist * 60 * 1.1515;
@@ -191,6 +194,13 @@ public class Punto implements Serializable {
   public void setLonR(double p_lonR) {
     lonR = p_lonR;
     lon = lonR / Math.PI * 180F;
+  }
+
+  public String getDD() {
+    String szLat = s_decFmt.format(lat).replace(",", ".");
+    String szLon = s_decFmt.format(lon).replace(",", ".");
+    String sz = String.format("lat=\"%s\" lon=\"%s\"", szLat, szLon);
+    return sz;
   }
 
   @Override
