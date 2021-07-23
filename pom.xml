@@ -73,8 +73,7 @@
 							</descriptorRefs>
 							<archive>
 								<manifest>
-									<!-- <mainClass>sm.claudio.imaging.main.MainApp</mainClass> -->
-									<mainClass>sm.claudio.imaging.swing.MainFrame2</mainClass>
+									<mainClass>sm.clagenna.gpxparse.MainApp</mainClass>
 								</manifest>
 							</archive>
 						</configuration>
@@ -101,7 +100,7 @@
 	</profiles>
 
 	<build>
-		<finalName>imaging</finalName>
+		<finalName>gpxparse</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
