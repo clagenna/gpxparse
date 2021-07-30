@@ -16,8 +16,10 @@ import lombok.Setter;
 
 public class AppProperties {
 
-  private static final Logger        s_log         = LogManager.getLogger(AppProperties.class);
-  private static final String        CSZ_PROP_FILE = "GpxParse.properties";
+  private static final Logger        s_log            = LogManager.getLogger(AppProperties.class);
+  private static final String        CSZ_PROP_FILE    = "GpxParse.properties";
+  private static final String        CSZ_PROP_LASTDIR = "lastDirGpx";
+  private static final String        CSZ_PROP_KMMIN   = "kmmin";
   private static AppProperties       s_inst;
 
   @Getter @Setter private Properties properties;
@@ -110,6 +112,22 @@ public class AppProperties {
 
   public void setBooleanPropVal(String p_key, boolean bVal) {
     setPropVal(p_key, Boolean.valueOf(bVal).toString());
+  }
+
+  public String getLastDir() {
+    return getPropVal(CSZ_PROP_LASTDIR);
+  }
+
+  public void setLastDir(String p_szPath) {
+    setPropVal(CSZ_PROP_LASTDIR, p_szPath);
+  }
+
+  public Integer getKmMin() {
+    return getPropIntVal(CSZ_PROP_KMMIN);
+  }
+
+  public void setKmMin(Integer p_kmMin) {
+    setPropVal(CSZ_PROP_LASTDIR, String.valueOf(p_kmMin));
   }
 
 }

@@ -73,7 +73,7 @@
 							</descriptorRefs>
 							<archive>
 								<manifest>
-									<mainClass>sm.clagenna.gpxparse.MainApp</mainClass>
+									<mainClass>sm.clagenna.gpxparse.swing.MainFrame</mainClass>
 								</manifest>
 							</archive>
 						</configuration>
