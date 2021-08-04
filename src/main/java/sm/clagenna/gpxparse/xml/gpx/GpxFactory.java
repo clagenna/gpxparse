@@ -1,4 +1,4 @@
-package sm.clagenna.gpxparse.gpx;
+package sm.clagenna.gpxparse.xml.gpx;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;

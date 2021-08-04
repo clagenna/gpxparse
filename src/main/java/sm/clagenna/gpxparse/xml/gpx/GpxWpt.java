@@ -1,4 +1,4 @@
-package sm.clagenna.gpxparse.gpx;
+package sm.clagenna.gpxparse.xml.gpx;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -10,10 +10,10 @@ import lombok.Getter;
 import sm.clagenna.gpxparse.util.AppUtils;
 import sm.clagenna.gpxparse.util.Punto;
 
-public class GpxTrk implements IGpxGest {
+public class GpxWpt implements IGpxGest {
 
   @SuppressWarnings("unused")
-  private static final Logger   s_log     = LogManager.getLogger(GpxTrk.class);
+  private static final Logger   s_log     = LogManager.getLogger(GpxWpt.class);
   private static final String   CXP_WPT   = "gpx/wpt";
   private static final String   CXP_TEMPO = "gpx/wpt/time";
   private static final String   CXP_NOME  = "gpx/wpt/name";
@@ -22,7 +22,7 @@ public class GpxTrk implements IGpxGest {
   @Getter private Punto         punto;
   @Getter private String        nome;
 
-  public GpxTrk() {
+  public GpxWpt() {
     //
   }
 

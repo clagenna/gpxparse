@@ -1,4 +1,4 @@
-package sm.clagenna.gpxparse.gpx;
+package sm.clagenna.gpxparse.xml.gpx;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,6 +12,7 @@ import lombok.Getter;
 import sm.clagenna.gpxparse.util.AppUtils;
 import sm.clagenna.gpxparse.util.Punto;
 
+@SuppressWarnings("unused")
 public class GpxRottaPunti implements IGpxGest {
 
   private static final Logger   s_log           = LogManager.getLogger(GpxRottaPunti.class);

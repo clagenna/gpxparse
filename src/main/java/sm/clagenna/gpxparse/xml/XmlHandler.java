@@ -18,6 +18,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class XmlHandler extends DefaultHandler {
 
+  @SuppressWarnings("unused")
   private static final Logger s_log = LogManager.getLogger(XmlHandler.class);
 
   private LinkedList<String>  m_stack;

@@ -14,7 +14,9 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.text.NumberFormat;
 
 import javax.swing.JButton;
@@ -25,6 +27,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -46,6 +49,7 @@ public class MainFrame extends JFrame {
   private JTextField          txGpxOut;
   private JFormattedTextField txKmMin;
   private JCheckBox           chckbxNewCheckBox;
+  private JProgressBar        m_progBar;
   private int                 m_nMinKm;
   private boolean             m_bLaunchBC;
   private File                m_fiIn;
@@ -104,7 +108,7 @@ public class MainFrame extends JFrame {
     //      }
     //    });
 
-    setBounds(100, 100, 654, 138);
+    setBounds(100, 100, 654, 167);
     contentPane = new JPanel();
     contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
     contentPane.setLayout(new BorderLayout(0, 0));
@@ -266,6 +270,16 @@ public class MainFrame extends JFrame {
     gbc_btSalva.gridx = 4;
     gbc_btSalva.gridy = 2;
     panel.add(btSalvaGPX, gbc_btSalva);
+
+    m_progBar = new JProgressBar();
+    GridBagConstraints gbc_progbar = new GridBagConstraints();
+    gbc_progbar.gridx = 0;
+    gbc_progbar.gridy = 3;
+    gbc_progbar.gridwidth = 4;
+    panel.add(m_progBar, gbc_progbar);
+    m_progBar.setValue(0);
+    m_progBar.setStringPainted(true);
+
   }
 
   private File apriFileChooser() {
@@ -377,13 +391,33 @@ public class MainFrame extends JFrame {
   protected void locSalvaClick() {
     setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
     try {
-      InsertGpxRpt igpx = new InsertGpxRpt();
+      long qtaRighe = contaRighe(m_fiIn);
+      m_progBar.setMaximum((int) qtaRighe);
+      InsertGpxRpt igpx = new InsertGpxRpt(this);
       igpx.doTheJob(m_nMinKm, m_fiIn, m_fiOut);
       if (m_bLaunchBC)
         lanciaBaseCamp();
     } finally {
       setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
+  }
+
+  public void settaProgBar(long p_v) {
+    m_progBar.setValue((int) p_v);
+  }
+
+  private long contaRighe(File p_fi) {
+    @SuppressWarnings("unused")
+    String riga = null;
+    long result = 0;
+    try (FileReader input = new FileReader(p_fi); LineNumberReader count = new LineNumberReader(input);) {
+      while ( (riga = count.readLine()) != null) {
+      }
+      result = count.getLineNumber() + 1; // +1 because line index starts at 0
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return result;
   }
 
   private void lanciaBaseCamp() {

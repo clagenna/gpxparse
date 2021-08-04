@@ -1,4 +1,4 @@
-package sm.clagenna.gpxparse.gpx;
+package sm.clagenna.gpxparse.xml.gpx;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -12,6 +12,7 @@ import sm.clagenna.gpxparse.util.Punto;
 
 public class GpxMetadata implements IGpxGest {
 
+  @SuppressWarnings("unused")
   private static final Logger   s_log     = LogManager.getLogger(GpxMetadata.class);
   private static final String   CXP_TEMPO = "gpx/metadata/time";
   private static final String   CXP_BOUND = "gpx/metadata/bounds";

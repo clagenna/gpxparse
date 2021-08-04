@@ -8,6 +8,7 @@ import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import sm.clagenna.gpxparse.swing.MainFrame;
 import sm.clagenna.gpxparse.util.Punto;
 
 public class InsertGpxRpt {
@@ -43,12 +44,13 @@ public class InsertGpxRpt {
   }
 
   /** distanza in metri per inserire l'inserto */
-  private int  m_distMin;
-  private File m_fiIn;
-  private File m_fiOut;
+  private int       m_distMin;
+  private File      m_fiIn;
+  private File      m_fiOut;
+  private MainFrame m_frame;
 
-  public InsertGpxRpt() {
-    //
+  public InsertGpxRpt(MainFrame mainFrame) {
+    m_frame = mainFrame;
   }
 
   public void doTheJob(int p_distMin, File p_fiIn, File p_fiOut) {
@@ -65,7 +67,10 @@ public class InsertGpxRpt {
       try (BufferedReader bur = new BufferedReader(new FileReader(m_fiIn))) {
         while ( (riga = bur.readLine()) != null) {
           boolean bMtch = false;
-          System.out.printf("%d\r", qtaRighe++);
+          if ( (qtaRighe++ % 13) == 0) {
+            m_frame.settaProgBar(qtaRighe);
+            System.out.printf("%d\r", qtaRighe);
+          }
           Matcher mtch = patrtept.matcher(riga);
           bMtch = mtch.find();
           if ( !bMtch) {
