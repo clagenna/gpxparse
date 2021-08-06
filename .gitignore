@@ -1,4 +1,5 @@
 /target/
 /bin/ 
 /log/
-/gpxparse.exe
+*.exe
+*.zip
