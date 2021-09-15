@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:q="http://www.anquet.com" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1" creator="OMN2 - www.anquet.com" xmlns="http://www.topografix.com/GPX/1/1">
+ <Name>My GPX</Name>
+   <rte>
+     <name>My Route</name>
+     <rtept lat="53.6631532845088" lon="-1.96147696032491" />
+     <rtept lat="53.6630457942212" lon="-1.95906982338804" />
+     <rtept lat="53.6630453605849" lon="-1.95781231336069" />
+   </rte>
+ </gpx>

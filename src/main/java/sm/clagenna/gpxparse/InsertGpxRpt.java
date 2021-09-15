@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
-import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,25 +13,28 @@ import sm.clagenna.gpxparse.util.Punto;
 
 public class InsertGpxRpt {
 
-  private static final String        CSZ_ENDGPXX = "</gpxx:rpt>";
-  private static final String        CSZ_INNESTO =                                                                         //
-      "</gpxx:RoutePointExtension>\r\n"                                                                                    //
-          + "          </extensions>\r\n"                                                                                  //
-          + "        </rtept>\r\n"                                                                                         //
-          + "        <rtept %s>\r\n"                                                                                       //
-          + "          <time>2021-07-22T13:04:09Z</time>\r\n"                                                              //
-          + "          <name>PtClaudio%s</name>\r\n"                                                                       //
-          + "          <sym>Waypoint</sym>\r\n"                                                                            //
-          + "          <extensions>\r\n"                                                                                   //
-          + "            <trp:ShapingPoint />\r\n"                                                                         //
+  private static final String CSZ_ENDGPXX = "</gpxx:rpt>";
+  private static final String CSZ_INNESTO =                                                                         //
+      "            </gpxx:RoutePointExtension>\r\n"                                                                 //
+          + "          </extensions>\r\n"                                                                           //
+          + "        </rtept>\r\n"                                                                                  //
+          + "        <rtept %s>\r\n"                                                                                //
+          + "          <time>2021-07-22T13:04:09Z</time>\r\n"                                                       //
+          + "          <name>wpCla%s</name>\r\n"                                                                //
+          + "          <sym>Waypoint</sym>\r\n"                                                                     //
+          + "          <extensions>\r\n"                                                                            //
+          + "            <trp:ShapingPoint />\r\n"                                                                  //
           + "            <gpxx:RoutePointExtension>\r\n";
 
-  private Pattern                    patrtept    = Pattern.compile("[^<]*<rtept lat=\"([0-9.]+)\" lon=\"([0-9.]+)\".*");
-  private Pattern                    patxxrpt    = Pattern.compile("[^<]*<gpxx:rpt lat=\"([0-9.]+)\" lon=\"([0-9.]+)\".*");
-  private Punto                      m_refPunto;
-  private Punto                      m_finalPunto;
-  private static final DecimalFormat s_decFmt    = new DecimalFormat("0000");
-  private int                        m_ptClaudio;
+  private static final int    MAXITER     = 5000;
+  private static final String CSZ_CODS    = "0123456789abcdefjhijklmnopqrstuvwxyz";
+
+  private Pattern             patrtept    = Pattern.compile("[^<]*<rtept lat=\"([0-9.]+)\" lon=\"([0-9.]+)\".*");
+  private Pattern             patxxrpt    = Pattern.compile("[^<]*<gpxx:rpt lat=\"([0-9.]+)\" lon=\"([0-9.]+)\".*");
+  private Punto               m_refPunto;
+  private Punto               m_finalPunto;
+  // private static final DecimalFormat s_decFmt    = new DecimalFormat("0000");
+  private int                 m_ptClaudio;
 
   enum Lavoro {
     scanFile, //
@@ -121,7 +124,8 @@ public class InsertGpxRpt {
 
               case scriviNuovoRTEPT:
                 String szDD = m_finalPunto.getDD();
-                String szSeq = s_decFmt.format(m_ptClaudio++);
+                // String szSeq = s_decFmt.format(m_ptClaudio++);
+                String szSeq = traduci(m_ptClaudio++);
                 riga = String.format(CSZ_INNESTO, szDD, szSeq);
                 curr = Lavoro.scriviRiga;
                 m_refPunto = m_finalPunto;
@@ -143,6 +147,26 @@ public class InsertGpxRpt {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  private String traduci(int p_val) {
+    int kc = CSZ_CODS.length();
+    String sz = "";
+    int resto;
+    LocalDateTime dt = LocalDateTime.now();
+    int val = 0;
+    val = dt.getHour();
+    val = val * 60 + dt.getMinute();
+    val = val * 60 + dt.getSecond();
+    val = val * MAXITER;
+    val += p_val;
+
+    while (val != 0) {
+      resto = val % kc;
+      val = val / kc;
+      sz = CSZ_CODS.charAt(resto) + sz;
+    }
+    return sz;
   }
 
   private void decodificaStartPoint(String riga, Matcher mtch) {
