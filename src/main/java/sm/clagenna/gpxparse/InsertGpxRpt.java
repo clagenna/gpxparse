@@ -8,10 +8,15 @@ import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javafx.concurrent.Task;
+
+import lombok.Getter;
+import lombok.Setter;
+import sm.clagenna.gpxparse.javafx.GpxParseFxmlController;
 import sm.clagenna.gpxparse.swing.MainFrame;
 import sm.clagenna.gpxparse.util.Punto;
 
-public class InsertGpxRpt {
+public class InsertGpxRpt extends Task<Void> {
 
   private static final String CSZ_ENDGPXX = "</gpxx:rpt>";
   private static final String CSZ_INNESTO =                                                                         //
@@ -20,7 +25,7 @@ public class InsertGpxRpt {
           + "        </rtept>\r\n"                                                                                  //
           + "        <rtept %s>\r\n"                                                                                //
           + "          <time>2021-07-22T13:04:09Z</time>\r\n"                                                       //
-          + "          <name>wpCla%s</name>\r\n"                                                                //
+          + "          <name>wpCla%s</name>\r\n"                                                                    //
           + "          <sym>Waypoint</sym>\r\n"                                                                     //
           + "          <extensions>\r\n"                                                                            //
           + "            <trp:ShapingPoint />\r\n"                                                                  //
@@ -47,32 +52,43 @@ public class InsertGpxRpt {
   }
 
   /** distanza in metri per inserire l'inserto */
-  private int       m_distMin;
-  private File      m_fiIn;
-  private File      m_fiOut;
-  private MainFrame m_frame;
+  @Getter @Setter private int                    metriMin;
+  @Getter @Setter private File                   fileIn;
+  @Getter @Setter private File                   fileOut;
+  @Getter @Setter private MainFrame              frame;
+  @Getter @Setter private GpxParseFxmlController fxcntrl;
 
   public InsertGpxRpt(MainFrame mainFrame) {
-    m_frame = mainFrame;
+    setFrame(mainFrame);
+  }
+
+  public InsertGpxRpt(GpxParseFxmlController gpxParseFxmlController) {
+    setFxcntrl(gpxParseFxmlController);
   }
 
   public void doTheJob(int p_distMin, File p_fiIn, File p_fiOut) {
-    m_distMin = p_distMin;
-    m_fiIn = p_fiIn;
-    m_fiOut = p_fiOut;
+    metriMin = p_distMin;
+    fileIn = p_fiIn;
+    fileOut = p_fiOut;
+    doTheJob();
+  }
+
+  public void doTheJob() {
+    System.out.println("InsertGpxRpt.doTheJob()");
     m_refPunto = null;
     String riga = null;
     int qtaRighe = 1;
     Lavoro curr = Lavoro.scriviRiga;
     m_ptClaudio = 1;
-    System.out.printf("Genero %s\n", m_fiOut.getAbsolutePath());
-    try (PrintWriter prt = new PrintWriter(m_fiOut)) {
-      try (BufferedReader bur = new BufferedReader(new FileReader(m_fiIn))) {
+    System.out.printf("Genero %s\n", fileOut.getAbsolutePath());
+    try (PrintWriter prt = new PrintWriter(fileOut)) {
+      try (BufferedReader bur = new BufferedReader(new FileReader(fileIn))) {
+        System.out.println("Aperto " + fileIn.getAbsolutePath());
         while ( (riga = bur.readLine()) != null) {
           boolean bMtch = false;
           if ( (qtaRighe++ % 13) == 0) {
-            m_frame.settaProgBar(qtaRighe);
-            System.out.printf("%d\r", qtaRighe);
+            aggiornaProgBar(qtaRighe);
+            // System.out.printf("%d\r", qtaRighe);
           }
           Matcher mtch = patrtept.matcher(riga);
           bMtch = mtch.find();
@@ -103,7 +119,7 @@ public class InsertGpxRpt {
                 decodificaGpxxRpt(riga, mtch);
                 boolean bCeEnd = riga.trim().endsWith("/>");
                 double distanza = m_refPunto.distance(m_finalPunto);
-                if (distanza < m_distMin) {
+                if (distanza < metriMin) {
                   curr = Lavoro.scriviRiga;
                   break;
                 }
@@ -143,10 +159,17 @@ public class InsertGpxRpt {
 
         }
       }
-      System.out.println("Scritto il file:" + m_fiOut.getAbsolutePath());
+      System.out.println("Scritto il file:" + fileOut.getAbsolutePath());
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  private void aggiornaProgBar(int qtaRighe) {
+    if (frame != null)
+      frame.settaProgBar(qtaRighe);
+    if (fxcntrl != null)
+      fxcntrl.settaProgBar(qtaRighe);
   }
 
   private String traduci(int p_val) {
@@ -179,6 +202,12 @@ public class InsertGpxRpt {
     double lat = Double.parseDouble(mtch.group(1));
     double lon = Double.parseDouble(mtch.group(2));
     m_finalPunto = new Punto(lat, lon);
+  }
+
+  @Override
+  protected Void call() throws Exception {
+    doTheJob();
+    return null;
   }
 
 }

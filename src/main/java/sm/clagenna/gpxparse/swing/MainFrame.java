@@ -412,8 +412,8 @@ public class MainFrame extends JFrame {
     long result = 0;
     try (FileReader input = new FileReader(p_fi); LineNumberReader count = new LineNumberReader(input);) {
       while ( (riga = count.readLine()) != null) {
+        result = count.getLineNumber() + 1; // +1 because line index starts at 0
       }
-      result = count.getLineNumber() + 1; // +1 because line index starts at 0
     } catch (Exception e) {
       e.printStackTrace();
     }
