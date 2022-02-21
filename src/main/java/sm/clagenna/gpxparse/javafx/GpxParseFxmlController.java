@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.LineNumberReader;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -20,7 +21,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
@@ -30,6 +33,7 @@ import javafx.stage.Stage;
 
 import com.jfoenix.controls.JFXButton;
 
+import sm.clagenna.gpxparse.ETipoWP;
 import sm.clagenna.gpxparse.TaskIGpxFactory;
 import sm.clagenna.gpxparse.util.AppProperties;
 
@@ -38,16 +42,18 @@ public class GpxParseFxmlController implements Initializable {
    * Nel fxml ci deve essere la specifica:<br/>
    * <code>fx:controller="sm.clagenna...GpxParseFxmlController"</code>
    */
-  public static final String         CSZ_FXMLNAME = "GpxParse.fxml";
-  private static int                 N_METRIMIN   = 100;
-  private static int                 N_METRIMAX   = 10_000;
-  private static final DecimalFormat s_fmt        = new DecimalFormat("#,##0");
+  public static final String         CSZ_FXMLNAME      = "GpxParse.fxml";
+  private static int                 N_METRIMIN        = 100;
+  private static int                 N_METRIMAX        = 10_000;
+  private static String              IMAGE_EDITING_ICO = "basecamp.ico";
+  private static final DecimalFormat s_fmt             = new DecimalFormat("#,##0");
 
   @FXML private TextField            txGpxIn;
   @FXML private TextField            txKmMin;
   @FXML private TextField            txGpxOut;
   @FXML private JFXButton            btCercaGpx;
   @FXML private CheckBox             ckLanciaBaseCamp;
+  @FXML private ChoiceBox<ETipoWP>   cbTipoWp;
   @FXML private JFXButton            btSalva;
   @FXML private Label                lbProgrBar;
   private double                     qtaRighe;
@@ -58,10 +64,23 @@ public class GpxParseFxmlController implements Initializable {
   private File                       m_fiOut;
   private int                        m_nMinKm;
   private boolean                    m_bLaunchBC;
+  private ETipoWP                    m_tipowp;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     AppProperties prop = AppProperties.getInst();
+    m_tipowp = ETipoWP.ShapingPoint;
+    cbTipoWp.getItems().addAll(ETipoWP.values());
+    cbTipoWp.getSelectionModel().select(m_tipowp);
+    cbTipoWp.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+      @Override
+      public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+        ETipoWP wp = ETipoWP.values()[newValue.intValue()];
+        m_tipowp = wp;
+        creaFileOut(m_fiIn);
+      }
+    });
+
     String sz = prop.getLastDir();
     if (sz != null) {
       settaFileIn(new File(sz));
@@ -83,6 +102,17 @@ public class GpxParseFxmlController implements Initializable {
         testNumerico(observable, oldValue, newValue);
       }
     });
+
+    Stage mainstage = GpxParseMainApp.getInst().getPrimaryStage();
+    InputStream stre = getClass().getResourceAsStream(IMAGE_EDITING_ICO);
+    if (stre == null)
+      stre = getClass().getClassLoader().getResourceAsStream(IMAGE_EDITING_ICO);
+    if (stre != null) {
+      Image ico = new Image(stre);
+      mainstage.getIcons().add(ico);
+    }
+    mainstage.setTitle("Inseritore di Way Point in files GPX");
+
     // progress = 0f;
   }
 
@@ -235,10 +265,24 @@ public class GpxParseFxmlController implements Initializable {
     if (szExt == null || !szExt.toLowerCase().equals("gpx")) {
       String szMsg = "Non è un file GPX: " + szFiOu;
       messageDialog(AlertType.ERROR, szMsg);
+      return;
     }
-    szFiOu = szFiOu.substring(0, n) + "_CONWP.gpx";
-    m_fiOut = new File(szFiOu);
-    txGpxOut.setText(szFiOu);
+    szFiOu = szFiOu.substring(0, n);
+    String sufx = "";
+    switch (m_tipowp) {
+      case ShapingPoint:
+        sufx = "_SHAPWP.gpx";
+        break;
+      case ViaPoint:
+        sufx = "_VIAWP.gpx";
+        break;
+    }
+    m_fiOut = new File(szFiOu + sufx);
+    int k = 1;
+    while (m_fiOut.exists()) {
+      m_fiOut = new File(szFiOu + "_" + k++ + sufx);
+    }
+    txGpxOut.setText(m_fiOut.getAbsolutePath());
   }
 
   @FXML
@@ -263,6 +307,7 @@ public class GpxParseFxmlController implements Initializable {
     //      lanciaBaseCamp();
 
     TaskIGpxFactory factory = new TaskIGpxFactory();
+    factory.setTipowp(m_tipowp);
     factory.setFxcntrl(this);
     factory.setMetriMin(m_nMinKm);
     factory.setFileIn(m_fiIn);
@@ -297,7 +342,7 @@ public class GpxParseFxmlController implements Initializable {
     if (m_bLaunchBC)
       lanciaBaseCamp();
     messageDialog(AlertType.INFORMATION, "Creato il file:" + m_fiOut.getAbsolutePath() // 
-    + "\nricordati di **ri-calcolare** in BaseCamp il nuovo percorso !");
+        + "\nricordati di **ri-calcolare** in BaseCamp il nuovo percorso !");
   }
 
   protected void abortitoJob() {

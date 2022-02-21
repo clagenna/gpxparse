@@ -18,24 +18,41 @@ import sm.clagenna.gpxparse.util.Punto;
 
 public class InsertGpxRpt extends Task<Void> {
 
-  private static final String CSZ_ENDGPXX = "</gpxx:rpt>";
-  private static final String CSZ_INNESTO =                                                                         //
-      "            </gpxx:RoutePointExtension>\r\n"                                                                 //
-          + "          </extensions>\r\n"                                                                           //
-          + "        </rtept>\r\n"                                                                                  //
-          + "        <rtept %s>\r\n"                                                                                //
-          + "          <time>2021-07-22T13:04:09Z</time>\r\n"                                                       //
-          + "          <name>wpCla%s</name>\r\n"                                                                    //
-          + "          <sym>Waypoint</sym>\r\n"                                                                     //
-          + "          <extensions>\r\n"                                                                            //
-          + "            <trp:ShapingPoint />\r\n"                                                                  //
+  private static final String CSZ_ENDGPXX       = "</gpxx:rpt>";
+  private static final String CSZ_INNESTO       =                                                                         //
+      "            </gpxx:RoutePointExtension>\r\n"                                                                       //
+          + "          </extensions>\r\n"                                                                                 //
+          + "        </rtept>\r\n"                                                                                        //
+          + "        <rtept %s>\r\n"                                                                                      //
+          + "          <time>2021-07-22T13:04:09Z</time>\r\n"                                                             //
+          + "          <name>wpCla%s</name>\r\n"                                                                          //
+          + "          <sym>Waypoint</sym>\r\n"                                                                           //
+          + "          <extensions>\r\n"                                                                                  //
+          + "            <trp:ShapingPoint />\r\n"                                                                        //
           + "            <gpxx:RoutePointExtension>\r\n";
 
-  private static final int    MAXITER     = 5000;
-  private static final String CSZ_CODS    = "0123456789abcdefjhijklmnopqrstuvwxyz";
+  private static final String CSZ_INNESTO_VIAPT =                                                                         //  
+      "        </gpxx:RoutePointExtension>\r\n"                                                                           //
+          + "      </extensions>\r\n"                                                                                     //
+          + "    </rtept>\r\n"                                                                                            //
+          + "    <rtept %s>\r\n"                                                                                          //
+          + "      <time>2022-02-18T17:03:29Z</time>\r\n"                                                                 //
+          + "      <name>wpCla%s</name>\r\n"                                                                              //
+          + "      <cmt>wpCla%s</cmt>\r\n"                                                                                //
+          + "      <desc>ins dopo %s m wpCla%s</desc>\r\n"                                                                //
+          + "      <sym>Waypoint</sym>\r\n"                                                                               //
+          + "      <extensions>\r\n"                                                                                      //
+          + "        <trp:ViaPoint>\r\n"                                                                                  //
+          + "          <trp:CalculationMode>FasterTime</trp:CalculationMode>\r\n"                                         //
+          + "          <trp:ElevationMode>Standard</trp:ElevationMode>\r\n"                                               //
+          + "        </trp:ViaPoint>\r\n"                                                                                 //
+          + "        <gpxx:RoutePointExtension>\r\n";
 
-  private Pattern             patrtept    = Pattern.compile("[^<]*<rtept lat=\"([0-9.]+)\" lon=\"([0-9.]+)\".*");
-  private Pattern             patxxrpt    = Pattern.compile("[^<]*<gpxx:rpt lat=\"([0-9.]+)\" lon=\"([0-9.]+)\".*");
+  private static final int    MAXITER           = 5000;
+  private static final String CSZ_CODS          = "0123456789abcdefjhijklmnopqrstuvwxyz";
+
+  private Pattern             patrtept          = Pattern.compile("[^<]*<rtept lat=\"([0-9.]+)\" lon=\"([0-9.]+)\".*");
+  private Pattern             patxxrpt          = Pattern.compile("[^<]*<gpxx:rpt lat=\"([0-9.]+)\" lon=\"([0-9.]+)\".*");
   private Punto               m_refPunto;
   private Punto               m_finalPunto;
   // private static final DecimalFormat s_decFmt    = new DecimalFormat("0000");
@@ -51,19 +68,25 @@ public class InsertGpxRpt extends Task<Void> {
     scriviRiga
   }
 
+  //  public static final int                        N_SHAPING_PT = 1;
+  //  public static final int                        N_VIA_PT     = 2;
+
   /** distanza in metri per inserire l'inserto */
   @Getter @Setter private int                    metriMin;
   @Getter @Setter private File                   fileIn;
   @Getter @Setter private File                   fileOut;
   @Getter @Setter private MainFrame              frame;
   @Getter @Setter private GpxParseFxmlController fxcntrl;
+  @Getter @Setter private ETipoWP                tipowp;
 
   public InsertGpxRpt(MainFrame mainFrame) {
     setFrame(mainFrame);
+    setTipowp(ETipoWP.ShapingPoint);
   }
 
   public InsertGpxRpt(GpxParseFxmlController gpxParseFxmlController) {
     setFxcntrl(gpxParseFxmlController);
+    setTipowp(ETipoWP.ShapingPoint);
   }
 
   public void doTheJob(int p_distMin, File p_fiIn, File p_fiOut) {
@@ -74,7 +97,7 @@ public class InsertGpxRpt extends Task<Void> {
   }
 
   public void doTheJob() {
-    System.out.println("InsertGpxRpt.doTheJob()");
+    System.out.println("InsertGpxRpt.doTheJob() TipoWP=" + tipowp);
     m_refPunto = null;
     String riga = null;
     int qtaRighe = 1;
@@ -142,7 +165,7 @@ public class InsertGpxRpt extends Task<Void> {
                 String szDD = m_finalPunto.getDD();
                 // String szSeq = s_decFmt.format(m_ptClaudio++);
                 String szSeq = traduci(m_ptClaudio++);
-                riga = String.format(CSZ_INNESTO, szDD, szSeq);
+                riga = getWayPoint(szDD, szSeq);
                 curr = Lavoro.scriviRiga;
                 m_refPunto = m_finalPunto;
                 break;
@@ -163,6 +186,21 @@ public class InsertGpxRpt extends Task<Void> {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  private String getWayPoint(String szGeoCoord, String szWpName) {
+    String riga = "";
+    switch (tipowp) {
+
+      case ShapingPoint:
+        riga = String.format(CSZ_INNESTO, szGeoCoord, szWpName);
+        break;
+
+      case ViaPoint:
+        riga = String.format(CSZ_INNESTO_VIAPT, szGeoCoord, szWpName, szWpName, String.valueOf(metriMin), szWpName);
+        break;
+    }
+    return riga;
   }
 
   private void aggiornaProgBar(int qtaRighe) {

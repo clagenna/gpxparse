@@ -43,14 +43,7 @@ public class GpxParseMainApp extends Application {
   public void stop() throws Exception {
     System.out.println("MainAppFxml.stop()");
     AppProperties prop = AppProperties.getInst();
-
-    //    prop.setPropVal(AppProperties.CSZ_PROP_DIMFRAME_X, String.format("%.0f", primaryStage.getWidth()));
-    //    prop.setPropVal(AppProperties.CSZ_PROP_DIMFRAME_Y, String.format("%.0f", primaryStage.getHeight()));
-    //    prop.setPropVal(AppProperties.CSZ_PROP_POSFRAME_X, String.format("%.0f", primaryStage.getX()));
-    //    prop.setPropVal(AppProperties.CSZ_PROP_POSFRAME_Y, String.format("%.0f", primaryStage.getY()));
-
     prop.saveProperties();
-
     super.stop();
   }
 

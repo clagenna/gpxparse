@@ -3,28 +3,17 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>sm.clagenna</groupId>
-	<artifactId>gpxp</artifactId>
+	<artifactId>gpxparse</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-
-
-	<repositories>
-		<repository>
-			<id>Gluon</id>
-			<name>Gluon Glisten</name>
-			<url>	https://gluonhq.com/products/mobile/</url>
-		</repository>
-	</repositories>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<mainClassName>sm.clagenna.gpxparse.javafx.GpxParseMainApp</mainClassName>
+		<lo4j2.vers>2.14.0</lo4j2.vers>
 		<maven.compiler.source>16</maven.compiler.source>
 		<maven.compiler.target>16</maven.compiler.target>
 		<javafx.version>16</javafx.version>
-		<lo4j2.vers>2.14.0</lo4j2.vers>
 		<lombok.version>1.18.16</lombok.version>
 	</properties>
-
-
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/org.openjfx/javafx -->
 		<dependency>
@@ -33,35 +22,29 @@
 			<version>${javafx.version}</version>
 			<type>pom</type>
 		</dependency>
-
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
 			<version>${javafx.version}</version>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-fxml -->
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-fxml</artifactId>
 			<version>${javafx.version}</version>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-web -->
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-web</artifactId>
 			<version>16</version>
 		</dependency>
-
-
 		<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-media -->
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-media</artifactId>
 			<version>18-ea+7</version>
 		</dependency>
-
 		<!-- per la swzione 8 prove con JFoenix -->
 		<dependency>
 			<groupId>com.jfoenix</groupId>
@@ -74,7 +57,6 @@
 			<artifactId>controlsfx</artifactId>
 			<version>11.1.0</version>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -82,7 +64,6 @@
 			<version>${lombok.version}</version>
 			<scope>provided</scope>
 		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -100,20 +81,82 @@
 			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
-
 	<build>
+		<finalName>gpxparse</finalName>
 		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<finalName>gpxparse</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
+					<archive>
+						<manifest>
+							<!-- <mainClass>sm.claudio.imaging.main.MainApp</mainClass> -->
+							<!-- mainClass>sm.claudio.imaging.swing.MainFrame2</mainClass -->
+							<mainClass>${mainClassName}</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<release>11</release>
+					<!-- compilerArgs> - - enable - preview</compilerArgs -->
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<fork>true</fork>
+					<compilerArgs>
+						<!-- arg enable-preview< / arg -->
+						<arg>-Xlint:all</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED</arg>
+						<arg>-J--add-opens=jdk.compiler/com.sun.tools.javac.jvm=ALL-UNNAMED</arg>
+					</compilerArgs>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.15</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+
 
 			<plugin>
 				<groupId>org.openjfx</groupId>
@@ -129,20 +172,16 @@
 				<artifactId>gluonfx-maven-plugin</artifactId>
 				<version>1.0.0</version>
 				<configuration>
-					<!-- Uncomment to run on iOS: -->
-					<!-- <target>ios</target> -->
 					<mainClass>${mainClassName}</mainClass>
 				</configuration>
 			</plugin>
 
 		</plugins>
 	</build>
-
 	<pluginRepositories>
 		<pluginRepository>
 			<id>gluon-releases</id>
 			<url>https://nexus.gluonhq.com/nexus/content/repositories/releases/</url>
 		</pluginRepository>
 	</pluginRepositories>
-
 </project>

@@ -1,29 +1,69 @@
+set LUOGO=%~dp0
+cd /d "%LUOGO%"
+cd
+set qta=0
+
+set JARTEST=target\gpxparse-jar-with-dependencies.jar
+if exist "%JARTEST%" (
+  set JAREXE=%JARTEST%
+  call :info  "%JARTEST%"
+  set /a qta=%qta%+1
+  )
+
+set JARTEST=gpxparse-jar-with-dependencies.jar
+if exist "%JARTEST%" (
+  set JAREXE=%JARTEST%
+  call :info  "%JARTEST%"
+  set /a qta=%qta%+1
+  )
+
+set JARTEST=target\gpxparse.jar
+if exist "%JARTEST%" (
+  set JAREXE=%JARTEST%
+  call :info  "%JARTEST%"
+  set /a qta=%qta%+1
+  )
+
+set JARTEST=gpxparse.jar
+if exist "%JARTEST%" (
+  set JAREXE=%JARTEST%
+  call :info  "%JARTEST%"
+  set /a qta=%qta%+1
+  )
+
+if %qta% equ 0 (
+  @echo.
+  call :errore Non trovo il *.JAR del programma ?!?
+  goto fine
+) 
+if %qta% gtr 1 (
+  @echo.
+  call :errore Troppi programmi *.JAR del programma !
+  call :errore cancella le versioni piu vecchie
+  call :errore e rilancia
+  goto fine
+) 
+goto vai
+
+
+
+:info
 @echo off
-java -version 
-set aa=%errorlevel%
-if %aa% equ 0 goto okjava
-@echo.
-@echo Non trovo Java installato !!!
-@echo.
-@echo Prova a visitare il sito (per java 16):
-@echo   https://www.oracle.com/java/technologies/javase-jdk16-downloads.html
-pause
-goto fine
+echo [92m%*[0m
+goto :eof
 
-:okjava
-set ESEG=gpxparse-jar-with-dependencies.jar
-if exist "%ESEG%" goto lancia
-set ESEG=gpxparse.jar
-if exist "%ESEG%" goto lancia
-set ESEG=target\gpxparse-jar-with-dependencies.jar
-if exist "%ESEG%" goto lancia
-set ESEG=gpxparse.jar
-if exist "%ESEG%" goto lancia
-@echo .
-@echo Cannot find JAR to launch
-goto fine
+:errore
+@echo off
+echo [91m%*[0m
+goto :eof
 
-:lancia
-java -jar "%ESEG%"
+:vai
+@echo on
+set MODPATH=C:\Program Files\javafx-sdk-17.0.1\lib
+set MODS=javafx.controls
+set MODS=%MODS%,javafx.base
+set MODS=%MODS%,javafx.fxml
+set MODS=%MODS%,javafx.graphics
+rem set MODS=%MODS%,javafx.media
 
-:fine
+java --module-path "%MODPATH%" --add-modules="%MODS%" -jar "%JAREXE%"

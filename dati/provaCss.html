@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+/* Markdown.css */
+/* Authors: Kevin Burke: http://kev.inburke.com/, modified by Evan Wondrasek  */
+/* https://bitbucket.org/kevinburke/markdowncss */
+
+body{
+    margin: 0 auto;
+    font-family: Georgia, Palatino, serif;
+    color: #444444;
+    line-height: 1;
+    max-width: 960px;
+    padding: 5px;
+}
+h1, h2, h3, h4 {
+    color: #111111;
+    font-weight: 400;
+}
+h1, h2, h3, h4, h5, p {
+    margin-bottom: 16px;
+    padding: 0;
+}
+h1 {
+    font-size: 28px;
+}
+h2 {
+    font-size: 22px;
+    margin: 20px 0 6px;
+}
+h3 {
+    font-size: 21px;
+}
+h4 {
+    font-size: 18px;
+}
+h5 {
+    font-size: 16px;
+}
+a {
+    color: #0099ff;
+    margin: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+a:hover {
+    text-decoration: none;
+    color: #ff6600;
+}
+a:visited {
+    color: purple;
+}
+ul, ol {
+    padding: 0;
+    margin: 0;
+}
+li {
+    line-height: 24px;
+    margin-left: 44px;
+}
+li ul, li ul {
+    margin-left: 24px;
+}
+p, ul, ol {
+    font-size: 14px;
+    line-height: 20px;
+    max-width: 540px;
+}
+pre {
+    padding: 0px 24px;
+    max-width: 800px;
+    white-space: pre-wrap;
+}
+code {
+    font-family: Consolas, Monaco, Andale Mono, monospace;
+    line-height: 1.5;
+    font-size: 13px;
+}
+aside {
+    display: block;
+    float: right;
+    width: 390px;
+}
+blockquote {
+    border-left:.5em solid #eee;
+    padding: 0 2em;
+    margin-left:0;
+    max-width: 476px;
+}
+blockquote  cite {
+    font-size:14px;
+    line-height:20px;
+    color:#bfbfbf;
+}
+blockquote cite:before {
+    content: '\2014 \00A0';
+}
+
+blockquote p {  
+    color: #666;
+    max-width: 460px;
+}
+hr {
+    width: 540px;
+    text-align: left;
+    margin: 0 auto 0 0;
+    color: #999;
+}
+
+button,
+input,
+select,
+textarea {
+  font-size: 100%;
+  margin: 0;
+  vertical-align: baseline;
+  *vertical-align: middle;
+}
+button, input {
+  line-height: normal;
+  *overflow: visible;
+}
+button::-moz-focus-inner, input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  cursor: pointer;
+  -webkit-appearance: button;
+}
+input[type=checkbox], input[type=radio] {
+  cursor: pointer;
+}
+/* override default chrome & firefox settings */
+input:not([type="image"]), textarea {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+
+input[type="search"] {
+  -webkit-appearance: textfield;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+}
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+label,
+input,
+select,
+textarea {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: normal;
+  margin-bottom: 18px;
+}
+input[type=checkbox], input[type=radio] {
+  cursor: pointer;
+  margin-bottom: 0;
+}
+input[type=text],
+input[type=password],
+textarea,
+select {
+  display: inline-block;
+  width: 210px;
+  padding: 4px;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 18px;
+  height: 18px;
+  color: #808080;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+select, input[type=file] {
+  height: 27px;
+  line-height: 27px;
+}
+textarea {
+  height: auto;
+}
+
+/* grey out placeholders */
+:-moz-placeholder {
+  color: #bfbfbf;
+}
+::-webkit-input-placeholder {
+  color: #bfbfbf;
+}
+
+input[type=text],
+input[type=password],
+select,
+textarea {
+  -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+  -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+  transition: border linear 0.2s, box-shadow linear 0.2s;
+  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+input[type=text]:focus, input[type=password]:focus, textarea:focus {
+  outline: none;
+  border-color: rgba(82, 168, 236, 0.8);
+  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+  -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+
+/* buttons */
+button {
+  display: inline-block;
+  padding: 4px 14px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  background-color: #0064cd;
+  background-repeat: repeat-x;
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#049cdb), to(#0064cd));
+  background-image: -moz-linear-gradient(top, #049cdb, #0064cd);
+  background-image: -ms-linear-gradient(top, #049cdb, #0064cd);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #049cdb), color-stop(100%, #0064cd));
+  background-image: -webkit-linear-gradient(top, #049cdb, #0064cd);
+  background-image: -o-linear-gradient(top, #049cdb, #0064cd);
+  background-image: linear-gradient(top, #049cdb, #0064cd);
+  color: #fff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  border: 1px solid #004b9a;
+  border-bottom-color: #003f81;
+  -webkit-transition: 0.1s linear all;
+  -moz-transition: 0.1s linear all;
+  transition: 0.1s linear all;
+  border-color: #0064cd #0064cd #003f81;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+}
+button:hover {
+  color: #fff;
+  background-position: 0 -15px;
+  text-decoration: none;
+}
+button:active {
+  -webkit-box-shadow: inset 0 3px 7px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: inset 0 3px 7px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 3px 7px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+button::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+</style>
+</head>
+<body>
+</body>
+<h2 id="tipi-di-dati">Tipi di dati</h2>
+<table>
+<thead>
+<tr>
+<th>Tipo di dato</th>
+<th>Nome</th>
+<th>Descrizione</th>
+<th>Esempi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Intero</td>
+<td><code>int</code></td>
+<td>Intero di dimensione arbitraria</td>
+<td>-42, 0, 1200, 999999999999999999</td>
+</tr>
+<tr>
+<td>Reale</td>
+<td><code>float</code></td>
+<td>Numero a virgola mobile</td>
+<td>3.14, 1.23e-10, 4.0E210</td>
+</tr>
+<tr>
+<td>Booleano</td>
+<td><code>bool</code></td>
+<td>Per valori veri o falsi</td>
+<td>True, False</td>
+</tr>
+<tr>
+<td>Complesso</td>
+<td><code>complex</code></td>
+<td>Numeri complessi con parte reale e immaginaria</td>
+<td>3+4j, 5.0+4.1j, 3j</td>
+</tr>
+<tr>
+<td>Stringhe</td>
+<td><code>str</code></td>
+<td>Usata per rappresentare testo</td>
+<td>&#39;&#39;, &#39;stefano&#39;, &quot;l&#39;acqua&quot;</td>
+</tr>
+<tr>
+<td>Bytes</td>
+<td><code>bytes</code></td>
+<td>Usata per rappresentare bytes</td>
+<td>b&#39;&#39;, b&#39;\x00\x01\x02&#39;, b&#39;Python&#39;</td>
+</tr>
+<tr>
+<td>Liste</td>
+<td><code>list</code></td>
+<td>Una sequenza mutabile di oggetti</td>
+<td>[], [1, 2, 3], [&#39;Hello&#39;, &#39;World&#39;]</td>
+</tr>
+<tr>
+<td>Tuple</td>
+<td><code>tuple</code></td>
+<td>Una sequenza immutabile di oggetti</td>
+<td>(), (1, 2, 3), (&#39;Python&#39;, 3)</td>
+</tr>
+<tr>
+<td>Insiemi</td>
+<td><code>set/frozenset</code></td>
+<td>Un’insieme di oggetti unici</td>
+<td>{1, 2, 3}, {&#39;World&#39;, &#39;Hello&#39;}</td>
+</tr>
+<tr>
+<td>Dizionari</td>
+<td><code>dict</code></td>
+<td>Una struttura che associa chiavi a valori</td>
+<td>{}, {&#39;nome&#39;: &#39;Ezio&#39;, &#39;cognome&#39;: &#39;Melotti&#39;}</td>
+</tr>
+</tbody>
+</table>
+<h2 id="keywords">Keywords</h2>
+<pre><code>False    None        True
+and        as            assert
+break        class        continue
+def            del            elif
+else        except        finally
+for            from        global
+if            import
+in             is             lambda
+nonlocal    not            or 
+pass         raise         return
+try            while        with
+yield;
+</code></pre><h2 id="assegnazione">assegnazione</h2>
+<p>La virgola separa assegnazione ma anche crea una tupla !<br>assegnazione multipla</p>
+<pre><code>&gt;&gt;&gt; a, b, c = 2, 3, 5  # assegnamento multiplo
+&gt;&gt;&gt; type(a)
+&lt;class &#39;int&#39;&gt;
+</code></pre><p>assegnazione tupla</p>
+<pre><code>&gt;&gt;&gt; t = 2, 3, 5  # assegnamento tupla
+&gt;&gt;&gt; type(t)
+&lt;class &#39;tuple&#39;&gt;
+</code></pre><p>assegnazione lista</p>
+<pre><code>&gt;&gt;&gt; li = [1,2,3,4,5]
+&gt;&gt;&gt; type(li)
+&lt;class &#39;list&#39;&gt;
+</code></pre><h2 id="numeri">Numeri</h2>
+<pre><code>&gt;&gt;&gt; 6 + 4*3
+18
+&gt;&gt;&gt; 9 / 2       # la divisione tra due numeri interi restituisce un float
+4.5 # in Python 2 tornava un int !!!
+&gt;&gt;&gt; 2j * 2j     # moltiplicazione tra numeri complessi
+(-4+0j)
+&gt;&gt;&gt; int(10.6)   # conversione esplicita dal tipo float al tipo int
+10
+&gt;&gt;&gt; float(20)   # conversione esplicita dal tipo int al tipo float
+20.0
+&gt;&gt;&gt; 0b11111111  # intero in notazione binaria (prefisso 0b)
+255
+&gt;&gt;&gt; 0o377       # intero in notazione ottale (prefisso 0o)
+255
+&gt;&gt;&gt; 0xFF        # intero in notazione esadecimale (prefisso 0x)
+255
+</code></pre><h2 id="operatori-aritmetici">operatori aritmetici</h2>
+<table>
+<thead>
+<tr>
+<th>Operatore</th>
+<th>Descrizione</th>
+<th>Esempi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>+</td>
+<td>addizione</td>
+<td>10 + 12 = 22</td>
+</tr>
+<tr>
+<td>–</td>
+<td>sottrazione</td>
+<td>5 - 1 = 4</td>
+</tr>
+<tr>
+<td>*</td>
+<td>moltiplicazione</td>
+<td>10 * 12 = 120</td>
+</tr>
+<tr>
+<td>/</td>
+<td>divisione</td>
+<td>9 / 4 = 2.25</td>
+</tr>
+<tr>
+<td>//</td>
+<td>divisione intera</td>
+<td>9 // 4 = 2</td>
+</tr>
+<tr>
+<td>%</td>
+<td>modulo (resto della divisione)</td>
+<td>9 % 4 = 1</td>
+</tr>
+</tbody>
+</table>
+<p>per gli altri  <a href="https://www.html.it/pag/39742/numeri-e-operatori-logici-in-python/">vedi html.it</a></p>
+<h2 id="help-e-dir">Help e dir</h2>
+<p>help(builtin cmd)</p>
+<pre><code>&gt;&gt;&gt; help(len)
+Help on built-in function len in module builtins:
+
+len(obj, /)
+    Return the number of items in a container.
+</code></pre><p>dir(oggetto) restituisce una lista di metodi e attributi dell’oggetto:</p>
+<pre><code>dir(str)
+[&#39;__add__&#39;, &#39;__class__&#39;, &#39;__contains__&#39;, &#39;__delattr__&#39;, &#39;__dir__&#39;, &#39;__doc__&#39;, &#39;__eq__&#39;, &#39;__format__&#39;, &#39;__ge__&#39;, &#39;__getattribute__&#39;, &#39;__getitem__&#39;, &#39;__getnewargs__&#39;, &#39;__gt__&#39;, &#39;__hash__&#39;, &#39;__init__&#39;, &#39;__init_subclass__&#39;, &#39;__iter__&#39;, &#39;__le__&#39;, &#39;__len__&#39;, &#39;__lt__&#39;, &#39;__mod__&#39;, &#39;__mul__&#39;, &#39;__ne__&#39;, &#39;__new__&#39;, &#39;__reduce__&#39;, &#39;__reduce_ex__&#39;, &#39;__repr__&#39;, &#39;__rmod__&#39;, &#39;__rmul__&#39;, &#39;__setattr__&#39;, &#39;__sizeof__&#39;, &#39;__str__&#39;, &#39;__subclasshook__&#39;, &#39;capitalize&#39;, &#39;casefold&#39;, &#39;center&#39;, &#39;count&#39;, &#39;encode&#39;, &#39;endswith&#39;, &#39;expandtabs&#39;, &#39;find&#39;, &#39;format&#39;, &#39;format_map&#39;, &#39;index&#39;, &#39;isalnum&#39;, &#39;isalpha&#39;, &#39;isascii&#39;, &#39;isdecimal&#39;, &#39;isdigit&#39;, &#39;isidentifier&#39;, &#39;islower&#39;, &#39;isnumeric&#39;, &#39;isprintable&#39;, &#39;isspace&#39;, &#39;istitle&#39;, &#39;isupper&#39;, &#39;join&#39;, &#39;ljust&#39;, &#39;lower&#39;, &#39;lstrip&#39;, &#39;maketrans&#39;, &#39;partition&#39;, &#39;replace&#39;, &#39;rfind&#39;, &#39;rindex&#39;, &#39;rjust&#39;, &#39;rpartition&#39;, &#39;rsplit&#39;, &#39;rstrip&#39;, &#39;split&#39;, &#39;splitlines&#39;, &#39;startswith&#39;, &#39;strip&#39;, &#39;swapcase&#39;, &#39;title&#39;, &#39;translate&#39;, &#39;upper&#39;, &#39;zfill&#39;]
+&gt;&gt;&gt; 
+</code></pre><h2 id="stringhe">stringhe</h2>
+<p>concat </p>
+<pre><code>&gt;&gt;&gt; &#39;Py&#39; + &#39;thon&#39;
+&#39;Python&#39;
+&gt;&gt;&gt; &#39;Py&#39; * 2
+&#39;PyPy&#39;
+&gt;&gt;&gt; &#39;Ba&#39; + &#39;na&#39; * 2
+&#39;Banana&#39;
+</code></pre><p>format</p>
+<pre><code>&gt;&gt;&gt; primo=&#39;io&#39;
+&gt;&gt;&gt; secon=&#39;tu&#39;
+&gt;&gt;&gt; fmt=&#39;{} vengo prima di {}&#39;
+&gt;&gt;&gt; fmt.format(primo,secon)
+&#39;io vengo prima di tu&#39;
+</code></pre><p>altro modo, con l&#39; <code>f&#39;</code> formatter </p>
+<pre><code>&gt;&gt;&gt; autore=&quot;isola misteriosa&quot;
+&gt;&gt;&gt; titolo =&quot;giulio vernbe&quot;
+&gt;&gt;&gt; f&quot;Titolo:{titolo}, Autore: {autore}&quot;
+&#39;Titolo:giulio vernbe, Autore: isola misteriosa&#39;
+</code></pre><h2 id="liste">Liste</h2>
+<p>esempio di utilizzo di liste</p>
+<pre><code>&gt;&gt;&gt; myList=[12,234,34,56]
+&gt;&gt;&gt; type(myList)
+&lt;class &#39;list&#39;&gt;
+&gt;&gt;&gt; myList
+[12, 234, 34, 56]
+&gt;&gt;&gt; myList[-1]
+56
+</code></pre><p>aggiungo una lista alla lista</p>
+<pre><code>&gt;&gt;&gt; myList += [77]
+&gt;&gt;&gt; myList
+[12, 234, 34, 56, 77]
+</code></pre><p>inserisco elementi</p>
+<pre><code>&gt;&gt;&gt; myList.insert(2,88)
+&gt;&gt;&gt; myList
+[12, 234, 88, 34, 56, 77]
+</code></pre><p>estraggo elementi (come dalle stringhe)</p>
+<pre><code>&gt;&gt;&gt; l3 = myList[2:4]
+&gt;&gt;&gt; l3
+[88, 34]
+</code></pre><h2 id="dizionari-map-">dizionari (map)</h2>
+<pre><code>&gt;&gt;&gt; diz={&#39;a&#39; : 12, &#39;b&#39;:17, &#39;c&#39;:23}
+&gt;&gt;&gt; diz
+{&#39;a&#39;: 12, &#39;b&#39;: 17, &#39;c&#39;: 23}
+&gt;&gt;&gt; diz[&#39;b&#39;]
+17
+</code></pre><p>posso modificarlo</p>
+<pre><code>&gt;&gt;&gt; diz[&#39;z&#39;] = 1024
+&gt;&gt;&gt; diz
+{&#39;a&#39;: 12, &#39;b&#39;: 17, &#39;c&#39;: 23, &#39;z&#39;: 1024}
+</code></pre><p>estrarre elementi di tipo <code>dict_item</code></p>
+<pre><code>&gt;&gt;&gt; di1=diz.items()
+&gt;&gt;&gt; di1
+dict_items([(&#39;a&#39;, 12), (&#39;b&#39;, 17), (&#39;c&#39;, 23)])
+</code></pre><p>creare un nuovo dict dagli items</p>
+<pre><code>&gt;&gt;&gt; dic2=dict(di1)
+&gt;&gt;&gt; dic2
+{&#39;a&#39;: 12, &#39;b&#39;: 17, &#39;c&#39;: 23}
+</code></pre><p>analizzare le sue possibilità</p>
+<pre><code>&gt;&gt;&gt; dir(diz)
+[&#39;__class__&#39;, &#39;__contains__&#39;, &#39;__delattr__&#39;, &#39;__delitem__&#39;, &#39;__dir__&#39;, &#39;__doc__&#39;, &#39;__eq__&#39;, &#39;__format__&#39;, &#39;__ge__&#39;, &#39;__getattribute__&#39;, &#39;__getitem__&#39;, &#39;__gt__&#39;, &#39;__hash__&#39;, &#39;__init__&#39;, &#39;__init_subclass__&#39;, &#39;__iter__&#39;, &#39;__le__&#39;, &#39;__len__&#39;, &#39;__lt__&#39;, &#39;__ne__&#39;, &#39;__new__&#39;, &#39;__reduce__&#39;, &#39;__reduce_ex__&#39;, &#39;__repr__&#39;, &#39;__reversed__&#39;, &#39;__setattr__&#39;, &#39;__setitem__&#39;, &#39;__sizeof__&#39;, &#39;__str__&#39;, &#39;__subclasshook__&#39;, &#39;clear&#39;, &#39;copy&#39;, &#39;fromkeys&#39;, &#39;get&#39;, &#39;items&#39;, &#39;keys&#39;, &#39;pop&#39;, &#39;popitem&#39;, &#39;setdefault&#39;, &#39;update&#39;, &#39;values&#39;]
+&gt;&gt;&gt; diz.keys()
+dict_keys([&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;z&#39;])
+&gt;&gt;&gt; diz.values()
+dict_values([12, 17, 23, 1024])
+</code></pre><h2 id="set-frozen-set">Set  frozen set</h2>
+<pre><code>&gt;&gt;&gt; nums = {10, 20, 30, 40}  # nuovo set di 4 elementi
+&gt;&gt;&gt; nums  # gli elementi del set non sono ordinati
+{40, 10, 20, 30}
+</code></pre><p>I set vengono definiti elencando tra parentesi graffe ({}) una serie di oggetti separati da virgole (,). Nonostante <strong>sia set</strong> che <strong>dizionari</strong> usino le parentesi graffe, Python è in grado di distinguerli perché i dizionari contengono chiavi e valori separati dai due punti. </p>
+<p>Dato che la sintassi {} è già utilizzata per definire un dizionario vuoto, non c’è <strong>nessuna sintassi</strong> disponibile per creare un <strong>set vuoto</strong>, che si può però definire usando set(). Anche per il frozenset non esiste una sintassi dedicata, ma è possibile usare frozenset(...).</p>
+<p>operazioni sui set, AND</p>
+<pre><code>&gt;&gt;&gt; mySet = { 10,20,30,40}
+&gt;&gt;&gt; mySet2 = { 30, 40, 50, 60}
+&gt;&gt;&gt; setAnd = mySet &amp; mySet2
+&gt;&gt;&gt; setAnd
+{40, 30}
+</code></pre><p>OR</p>
+<pre><code>&gt;&gt;&gt; setOr = mySet | mySet2
+&gt;&gt;&gt; setOr
+{40, 10, 50, 20, 60, 30}
+</code></pre><p>Differenza</p>
+<pre><code>&gt;&gt;&gt; mySet - mySet2
+{10, 20}
+</code></pre><p>OR esclusivo</p>
+<pre><code>&gt;&gt;&gt; mySet ^ mySet2
+{10, 50, 20, 60}
+</code></pre><h1 id="struttura-del-codice">Struttura del codice</h1>
+<p>Una riga può proseguire su più righe</p>
+<pre><code>&gt;&gt;&gt; s = &quot;Python \
+... programming \
+... language&quot;
+&gt;&gt;&gt; s
+&#39;Python programming language&#39;
+</code></pre><p>ancora</p>
+<pre><code>&gt;&gt;&gt; t = ( 1,2,3,
+... 4,5,6)
+&gt;&gt;&gt; t
+(1, 2, 3, 4, 5, 6)
+</code></pre><p>ma possono essere presenti sulla stessa riga con &#39;<code>;</code>&#39;</p>
+<pre><code>&gt;&gt;&gt; t = ( 1,2,3) ; t
+(1, 2, 3)
+</code></pre><h2 id="if-elif-else">if-elif-else</h2>
+<p>la condizione dev&#39;essere boolean,<br><strong>NB:</strong> notare i <code>&#39;:&#39;</code> dopo <code>if</code> e <code>else</code><br>    if condizione:</p>
+<pre><code>    # gruppo di istruzioni eseguite
+    # se la condizione è vera
+elif condizione:
+    # gruppo di istruzioni eseguite
+    # se la condizione è vera
+else:
+    # gruppo di istruzioni eseguite
+    # se la condizione è falsa
+</code></pre><p>In Python <strong>non esiste </strong>il costrutto <code>switch-case</code>, ma è tuttavia possibile ottenere lo stesso risultato semplicemente usando un <code>if-elif-else:</code></p>
+<h2 id="for-e-for-else">for e for-else</h2>
+<p>Il ciclo for ci permette di <strong>iterare</strong> su tutti gli elementi di un iterabile ed eseguire un determinato blocco di codice. Un iterabile è un qualsiasi oggetto in grado di restituire tutti gli elementi uno dopo l’altro, come ad esempio liste, tuple, set, dizionari</p>
+<pre><code>seq = [1, 2, 3, 4, 5]
+for n in seq:
+    print(&#39;Il numero&#39;, n, &#39;è&#39;, end=&#39; &#39;)
+    if n%2 == 0:
+        print(&#39;pari&#39;)
+    else:
+        print(&#39;dispari&#39;)
+</code></pre><p>lanciando dà</p>
+<blockquote>
+<blockquote>
+<blockquote>
+<pre><code>===== RESTART: C:/java/eclipse4.18/provapy/src/claudio/provapy/paridisp.py =====
+Il numero 1 è dispari
+Il numero 2 è pari
+Il numero 3 è dispari
+Il numero 4 è pari
+Il numero 5 è dispari
+</code></pre></blockquote>
+</blockquote>
+</blockquote>
+<p>notato che in Python il ciclo for <strong>non usa</strong> indici che vengono incrementati manualmente (come ad esempio avviene in C), ma è invece più simile a costrutti quali il <strong>foreach</strong>.<br>Per sequenze conviene utilizzare <code>range(start, end)</code><br>esempio:</p>
+<pre><code>for n in range(0,6):
+    print(&#39;Il numero&#39;, n, &#39;è&#39;, end=&#39; &#39;)
+    if n%2 == 0:
+        print(&#39;pari&#39;)
+    else:
+        print(&#39;dispari&#39;)
+</code></pre><p>altro esempio on stringa</p>
+<pre><code>&gt;&gt;&gt; for i in &#39;Python&#39;:
+...     print(i)
+...
+P
+y
+t
+h
+o
+n
+</code></pre><p>esempio con dizionario</p>
+<pre><code>&gt;&gt;&gt; for i in diz.items():
+...     print(i)
+...
+(&#39;a&#39;, 12)
+(&#39;b&#39;, 17)
+(&#39;c&#39;, 23)
+</code></pre><h2 id="funzione-range-">funzione range()</h2>
+<p>la funzione <code>range(start, stop, step)</code> suplisce alla for loop</p>
+<pre><code>&gt;&gt;&gt; for i in range(2,10,3):
+...     print(i)
+...
+2
+5
+8
+</code></pre><h2 id="while-e-while-else">while e while-else</h2>
+<pre><code>seq = [10, 20, 30, 40, 50, 60]
+while len(seq) &gt; 3:
+    print(seq.pop())
+else:
+      print &quot;fine loop&quot;
+</code></pre><p>emette il seguente</p>
+<pre><code>60
+50
+40
+fine loop
+</code></pre><p>ovviamente ogni ciclo ammette <code>break</code> e <code>continue</code></p>
+<h2 id="le-comprehention">le comprehention</h2>
+<p>ci permette di creare in modo conciso e conveniente nuove liste, set, e dizionari partendo da una sequenza di valori esistenti.</p>
+<h3 id="list-comprehention">list comprehention</h3>
+<pre><code>&gt;&gt;&gt; # list comprehension che crea una lista di quadrati
+&gt;&gt;&gt; [x**2 for x in range(10)]
+[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+</code></pre><p>l&#39;esercizio del for con la comprehention</p>
+<pre><code>&gt;&gt;&gt; lip2 = [ n for n in range(10,30) if n%2 == 0 and n&lt;25 ]
+&gt;&gt;&gt; lip2
+[10, 12, 14, 16, 18, 20, 22, 24]
+</code></pre><p>oppure con filtro: listcomp che filtra i numeri e prende solo quelli pari</p>
+<pre><code>&gt;&gt;&gt; [x for x in range(10) if x%2 == 0]
+[0, 2, 4, 6, 8]
+</code></pre><p>listcomp che crea tutte le combinazioni tra ABC e 123</p>
+<pre><code>&gt;&gt;&gt; [c+n for c in &#39;ABC&#39; for n in &#39;123&#39;]
+[&#39;A1&#39;, &#39;A2&#39;, &#39;A3&#39;, &#39;B1&#39;, &#39;B2&#39;, &#39;B3&#39;, &#39;C1&#39;, &#39;C2&#39;, &#39;C3&#39;]
+</code></pre><h3 id="set-comprehention">set comprehention</h3>
+<pre><code>&gt;&gt;&gt; # set comprehension che crea un set di cubi
+&gt;&gt;&gt; {x**3 for x in range(10)}
+{0, 1, 64, 512, 8, 343, 216, 729, 27, 125}
+</code></pre><p>altro esempio di set comprehention</p>
+<pre><code>&gt;&gt; a=&#39;doppione&#39;
+&gt;&gt;&gt; b={x for x in a}
+&gt;&gt;&gt; b
+{&#39;d&#39;, &#39;o&#39;, &#39;p&#39;, &#39;e&#39;, &#39;n&#39;, &#39;i&#39;}
+</code></pre><p>altro esempio,  setcomp che filtra le lettere e prende solo quelle uppercase</p>
+<pre><code>&gt;&gt;&gt; {c for c in &#39;aAbBcCdDeE&#39; if c.isupper()}
+{&#39;C&#39;, &#39;E&#39;, &#39;B&#39;, &#39;A&#39;, &#39;D&#39;}
+&gt;&gt;&gt;
+</code></pre><h3 id="dict-comprehention">dict comprehention</h3>
+<p>che ha la seguente sintassi<br><code>{key_expr : val_expr for item in iterable if cond }</code></p>
+<pre><code>&gt;&gt;&gt; # dict comprehension che mappa lettere lowercase all&#39;equivalente uppercase
+&gt;&gt;&gt; {c: c.upper() for c in &#39;abcde&#39;}
+{&#39;c&#39;: &#39;C&#39;, &#39;e&#39;: &#39;E&#39;, &#39;a&#39;: &#39;A&#39;, &#39;b&#39;: &#39;B&#39;, &#39;d&#39;: &#39;D&#39;}
+</code></pre><p>altro esempio di dict comprehention</p>
+<pre><code>&gt;&gt;&gt; a = &#39;Python&#39;
+&gt;&gt;&gt; di1={k: ord(k) for k in a}
+&gt;&gt;&gt; di1
+{&#39;P&#39;: 80, &#39;y&#39;: 121, &#39;t&#39;: 116, &#39;h&#39;: 104, &#39;o&#39;: 111, &#39;n&#39;: 110}
+</code></pre><h1 id="funzioni">Funzioni</h1>
+<p>Anche le funzioni <strong>sono oggetti</strong>, sono chiamati <code>callable object</code><br>e viene definita con la sintassi</p>
+<pre><code>def fun_name(parameters}:
+    statement body
+</code></pre><h2 id="parametri">Parametri</h2>
+<h3 id="parametri-posizionali">parametri posizionali</h3>
+<pre><code>def myFunc( a, b, c, d):
+    print(a,b,c,d)
+</code></pre><p>richiamo</p>
+<pre><code>myFunc(10,20,30,40)
+10 20 30 40
+</code></pre><p>sbaglio quantita argomenti</p>
+<pre><code>&gt;&gt;&gt; myFunc(10,20,30)
+Traceback (most recent call last):
+  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+TypeError: myFunc() missing 1 required positional argument: &#39;d&#39;
+</code></pre><p>richiamo con nomina(keyword)</p>
+<pre><code>&gt;&gt;&gt; myFunc(b=10,a=20,d=30,c=40)
+20 10 40 30
+</code></pre><h3 id="parametri-opzionali">Parametri opzionali</h3>
+<pre><code>def myFunc( a, b, c=50, d=80):
+    print(a,b,c,d)
+&gt;&gt;&gt; myFunc(10,20)
+10 20 50 80
+</code></pre><h3 id="parametri-args">Parametri *args</h3>
+<p>in questo caso args rappresenta una tupla</p>
+<pre><code>&gt;&gt;&gt; def myFunc( *args):
+...     print(args)
+...
+&gt;&gt;&gt; myFunc(10,20,30)
+(10, 20, 30)
+</code></pre><h3 id="parametri-kwargs">Parametri **kwargs</h3>
+<p>in questo caso args rappresenta un dict</p>
+<pre><code>&gt;&gt;&gt; def myFunc(**kwargs):
+...     print(kwargs)
+...
+&gt;&gt;&gt; myFunc(b=10,a=20,d=30,c=40)
+{&#39;b&#39;: 10, &#39;a&#39;: 20, &#39;d&#39;: 30, &#39;c&#39;: 40}
+</code></pre><h2 id="return">Return</h2>
+<p>Ogni funzione torna sia implicitamente(<code>None</code>) che esplicitamente con <code>return</code></p>
+<pre><code>&gt;&gt;&gt; def myFunc(a,b):
+...     return a + b
+...
+&gt;&gt;&gt; myFunc(3,5)
+8
+</code></pre><h2 id="funzione-come-oggetto">Funzione come oggetto</h2>
+<pre><code>&gt;&gt;&gt; def sum(a,b):
+...     print(a+b)
+...
+&gt;&gt;&gt; sum(4,6)
+10
+&gt;&gt;&gt; type(sum)
+&lt;class &#39;function&#39;&gt;
+</code></pre><h2 id="funzioni-nidificate">Funzioni nidificate</h2>
+<p>in python le funzioni possono essere nidificate</p>
+<pre><code>&gt;&gt;&gt; def outer(x,y):
+...     def inner(a,b):
+...             return a + b
+...     print(inner(x,y))
+...
+&gt;&gt;&gt; outer(10,5)
+15
+</code></pre><p>si possono tornare funzioni</p>
+<pre><code>&gt;&gt;&gt; def outer(x,y):
+...     def inner(a,b):
+...             return a + b
+...     return inner
+...
+&gt;&gt;&gt; fu = outer(2,3)
+&gt;&gt;&gt; fu(7,5)
+12
+</code></pre><h1 id="namespace-e-scope">Namespace e scope</h1>
+<p><img src="file:///F:\Google Drive\Util\python\01_scope.png" alt="Gerarchia LEGB"></p>
+<p>Gerarchia</p>
+
+
+</html>

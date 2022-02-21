@@ -12,6 +12,7 @@ import sm.clagenna.gpxparse.swing.MainFrame;
 public class TaskIGpxFactory {
 
   /** distanza in metri per inserire l'inserto */
+  @Getter @Setter private ETipoWP                tipowp;
   @Getter @Setter private int                    metriMin;
   @Getter @Setter private File                   fileIn;
   @Getter @Setter private File                   fileOut;
@@ -23,7 +24,7 @@ public class TaskIGpxFactory {
   }
 
   public TaskIGpxFactory(GpxParseFxmlController ctrl, int metri, File fin, File fout) {
-    System.out.println("TaskIGpxFactory.TaskIGpxFactory()");
+    // System.out.println("TaskIGpxFactory.TaskIGpxFactory()");
     setFxcntrl(ctrl);
     setMetriMin(metri);
     setFileIn(fin);
@@ -38,6 +39,7 @@ public class TaskIGpxFactory {
       protected Void call() throws InterruptedException {
         System.out.println("TaskIGpxFactory.get().new Task() {...}.call()");
         InsertGpxRpt igpt = new InsertGpxRpt(fxcntrl);
+        igpt.setTipowp(tipowp);
         igpt.doTheJob(metriMin, fileIn, fileOut);
         return null;
       }
