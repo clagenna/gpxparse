@@ -9,8 +9,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClassName>sm.clagenna.gpxparse.javafx.GpxParseMainApp</mainClassName>
 		<lo4j2.vers>2.14.0</lo4j2.vers>
-		<maven.compiler.source>16</maven.compiler.source>
-		<maven.compiler.target>16</maven.compiler.target>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<java.version>17</java.version>
 		<javafx.version>16</javafx.version>
 		<lombok.version>1.18.16</lombok.version>
 	</properties>
