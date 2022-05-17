@@ -4,7 +4,7 @@
  */
 module gpxparse {
   exports sm.clagenna.gpxparse.javafx;
-  exports sm.clagenna.gpxparse.prove;
+  
 
   requires javafx.controls;
   requires javafx.fxml;
@@ -18,8 +18,8 @@ module gpxparse {
   requires com.jfoenix;
   requires java.desktop;
   requires org.apache.logging.log4j;
+  requires commons.cli;
 
   opens sm.clagenna.gpxparse.javafx to javafx.fxml;
-  opens sm.clagenna.gpxparse.prove to javafx.fxml,javafx.graphics;
 
 }

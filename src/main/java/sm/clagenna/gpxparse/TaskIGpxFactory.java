@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import sm.clagenna.gpxparse.javafx.GpxParseFxmlController;
 import sm.clagenna.gpxparse.swing.MainFrame;
+import sm.clagenna.gpxparse.util.ETipoWP;
 
 public class TaskIGpxFactory {
 

@@ -9,22 +9,29 @@ The new gpx file will have an extention of "_CONWP.gpx"
 ## Package
 You can package a jar with all dependencies with command:
 
-	mvn clean package -P remote
+	mvn clean package
 	
 this will create under dir `/target/` a file `gpxparse-jar-with-dependencies.jar`
 wich can be launched (under directorory of project) with command:
 
-	java -jar target/gpxparse-jar-with-dependencies.jar
+	java -jar target/gpxparse.jar
 ## properties files
 this app uses property file `GpxParse.properties` wich contains some important keys but also
 key `lastDirGpx` wich is the last file(also dir) opened 	
 
 ##Launch
 
-The `gpxparse-jar-with-dependencies.jar` file which can be launched (under the project directory) with the command:
+The `gpxparse.jar` file which cannot be launched (under the project directory) with the command:
 
-	java -jar target / gpxparse-jar-with-dependencies.jar
-or with the cmd `lancia.cmd`
+	java -jar target/gpxparse-jar-with-dependencies.jar
+	
+because of use `javafx` you have to lauch with 
+
+	java 	--module-path "C:\Program Files\javafx-sdk-17.0.1\lib" 
+			--add-modules="javafx.controls,javafx.base,javafx.fxml,javafx.graphics" 
+			-jar "target\gpxparse.jar"
+			
+ or with the cmd `lancia.cmd`
 
 if everything works correctly the following form should appear:
 

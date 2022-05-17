@@ -10,6 +10,8 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 
+import com.jfoenix.controls.JFXButton;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,21 +23,22 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.Image;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.InputMethodEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import com.jfoenix.controls.JFXButton;
-
-import sm.clagenna.gpxparse.ETipoWP;
+import lombok.Getter;
+import lombok.Setter;
 import sm.clagenna.gpxparse.TaskIGpxFactory;
+import sm.clagenna.gpxparse.ex.GpxException;
 import sm.clagenna.gpxparse.util.AppProperties;
+import sm.clagenna.gpxparse.util.AppUtils;
+import sm.clagenna.gpxparse.util.ETipoWP;
 
 public class GpxParseFxmlController implements Initializable {
   /**
@@ -48,18 +51,30 @@ public class GpxParseFxmlController implements Initializable {
   private static String              IMAGE_EDITING_ICO = "basecamp.ico";
   private static final DecimalFormat s_fmt             = new DecimalFormat("#,##0");
 
-  @FXML private TextField            txGpxIn;
-  @FXML private TextField            txKmMin;
-  @FXML private TextField            txGpxOut;
-  @FXML private JFXButton            btCercaGpx;
-  @FXML private CheckBox             ckLanciaBaseCamp;
-  @FXML private ChoiceBox<ETipoWP>   cbTipoWp;
-  @FXML private JFXButton            btSalva;
-  @FXML private Label                lbProgrBar;
+  @FXML
+  private TextField                  txGpxIn;
+  @FXML
+  private TextField                  txKmMin;
+  @FXML
+  private TextField                  txGpxOut;
+  @FXML
+  private JFXButton                  btCercaGpx;
+  @FXML
+  private CheckBox                   ckLanciaBaseCamp;
+  @FXML
+  private ChoiceBox<ETipoWP>         cbTipoWp;
+  @FXML
+  private JFXButton                  btSalva;
+  @FXML
+  private Label                      lbProgrBar;
   private double                     qtaRighe;
   // private double             progress;
-  @FXML private ProgressBar          progBar;
+  @FXML
+  private ProgressBar                progBar;
 
+  @Getter
+  @Setter
+  private File                       lastDir;
   private File                       m_fiIn;
   private File                       m_fiOut;
   private int                        m_nMinKm;
@@ -77,15 +92,28 @@ public class GpxParseFxmlController implements Initializable {
       public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
         ETipoWP wp = ETipoWP.values()[newValue.intValue()];
         m_tipowp = wp;
-        creaFileOut(m_fiIn);
+        try {
+          m_fiOut = AppUtils.creaFileOut(m_fiIn);
+          txGpxOut.setText(m_fiOut.getAbsolutePath());
+        } catch (GpxException e) {
+          messageDialog(AlertType.ERROR, e.getMessage());
+        }
       }
     });
 
     String sz = prop.getLastDir();
-    if (sz != null) {
-      settaFileIn(new File(sz));
-      creaFileOut(m_fiIn);
-    }
+    if (sz != null)
+      setLastDir(new File(sz));
+
+    //    if (sz != null) {
+    //      settaFileIn(new File(sz));
+    //      try {
+    //        m_fiOut = AppUtils.creaFileOut(m_fiIn);
+    //        txGpxOut.setText(m_fiOut.getAbsolutePath());
+    //      } catch (GpxException e) {
+    //        messageDialog(AlertType.ERROR, e.getMessage());
+    //      }
+    //    }
     m_bLaunchBC = false;
     Integer k = prop.getKmMin();
     if (k != null && k > 0)
@@ -119,24 +147,31 @@ public class GpxParseFxmlController implements Initializable {
   @FXML
   void btCercaClick(ActionEvent event) {
     Stage stage = GpxParseMainApp.getInst().getPrimaryStage();
-    FileChooser fil = new FileChooser();
-    // imposto la dir precedente (se c'Ã¨)
+    FileChooser filChoose = new FileChooser();
+    // imposto la dir precedente (se c'è)
     AppProperties props = AppProperties.getInst();
     String sz = props.getLastDir();
     if (sz != null) {
       File fi = new File(sz);
-      if (fi.exists() && !fi.isDirectory())
-        fi = fi.getParentFile();
       if (fi.exists())
-        fil.setInitialDirectory(fi);
+        filChoose.setInitialDirectory(fi);
     }
-    fil.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("GPX files", "*.gpx"));
-    File fileScelto = fil.showOpenDialog(stage);
+    filChoose.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("GPX files", "*.gpx"));
+    System.out.println("GpxParseFxmlController.btCercaClick() init dir=" + filChoose.getInitialDirectory());
+    File fileScelto = filChoose.showOpenDialog(stage);
     if (fileScelto != null) {
       String lastDir = fileScelto.getParentFile().getAbsolutePath();
+      setLastDir(new File(lastDir));
       props.setLastDir(lastDir);
       fileScelto = settaFileIn(fileScelto);
-      creaFileOut(fileScelto);
+      // creaFileOut(fileScelto);
+      try {
+        m_fiOut = AppUtils.creaFileOut(fileScelto);
+        txGpxOut.setText(m_fiOut.getAbsolutePath());
+      } catch (GpxException e) {
+        messageDialog(AlertType.ERROR, e.getMessage());
+      }
+
     } else {
       System.out.println("Non hai scelto nulla !!");
     }
@@ -161,7 +196,13 @@ public class GpxParseFxmlController implements Initializable {
     }
     if (fi != null) {
       settaFileIn(fi);
-      creaFileOut(fi);
+      // creaFileOut(fi);
+      try {
+        m_fiOut = AppUtils.creaFileOut(fi);
+        txGpxOut.setText(m_fiOut.getAbsolutePath());
+      } catch (GpxException e) {
+        messageDialog(AlertType.ERROR, e.getMessage());
+      }
     }
   }
 
@@ -213,7 +254,7 @@ public class GpxParseFxmlController implements Initializable {
       return null;
     }
     AppProperties props = AppProperties.getInst();
-    props.setLastDir(p_fi.getAbsolutePath());
+    props.setLastDir(p_fi.getParent());
     if (p_setTx)
       txGpxIn.setText(p_fi.getAbsolutePath());
     m_fiIn = p_fi;
@@ -253,37 +294,37 @@ public class GpxParseFxmlController implements Initializable {
     alert.setContentText(p_msg);
     alert.showAndWait();
   }
-
-  private void creaFileOut(File p_fiIn) {
-    String szFiOu = p_fiIn.getAbsolutePath();
-    int n = szFiOu.lastIndexOf(".");
-    if (n < 1) {
-      System.out.println("Non trovo il suffisso GPX" + szFiOu);
-      System.exit(1957);
-    }
-    String szExt = szFiOu.substring(n + 1);
-    if (szExt == null || !szExt.toLowerCase().equals("gpx")) {
-      String szMsg = "Non è un file GPX: " + szFiOu;
-      messageDialog(AlertType.ERROR, szMsg);
-      return;
-    }
-    szFiOu = szFiOu.substring(0, n);
-    String sufx = "";
-    switch (m_tipowp) {
-      case ShapingPoint:
-        sufx = "_SHAPWP.gpx";
-        break;
-      case ViaPoint:
-        sufx = "_VIAWP.gpx";
-        break;
-    }
-    m_fiOut = new File(szFiOu + sufx);
-    int k = 1;
-    while (m_fiOut.exists()) {
-      m_fiOut = new File(szFiOu + "_" + k++ + sufx);
-    }
-    txGpxOut.setText(m_fiOut.getAbsolutePath());
-  }
+  //
+  //  private void creaFileOut(File p_fiIn) {
+  //    String szFiOu = p_fiIn.getAbsolutePath();
+  //    int n = szFiOu.lastIndexOf(".");
+  //    if (n < 1) {
+  //      System.out.println("Non trovo il suffisso GPX" + szFiOu);
+  //      System.exit(1957);
+  //    }
+  //    String szExt = szFiOu.substring(n + 1);
+  //    if (szExt == null || !szExt.toLowerCase().equals("gpx")) {
+  //      String szMsg = "Non è un file GPX: " + szFiOu;
+  //      messageDialog(AlertType.ERROR, szMsg);
+  //      return;
+  //    }
+  //    szFiOu = szFiOu.substring(0, n);
+  //    String sufx = "";
+  //    switch (m_tipowp) {
+  //      case ShapingPoint:
+  //        sufx = "_SHAPWP.gpx";
+  //        break;
+  //      case ViaPoint:
+  //        sufx = "_VIAWP.gpx";
+  //        break;
+  //    }
+  //    m_fiOut = new File(szFiOu + sufx);
+  //    int k = 1;
+  //    while (m_fiOut.exists()) {
+  //      m_fiOut = new File(szFiOu + "_" + k++ + sufx);
+  //    }
+  //    txGpxOut.setText(m_fiOut.getAbsolutePath());
+  //  }
 
   @FXML
   public void onEnter(ActionEvent ae) {
@@ -341,7 +382,7 @@ public class GpxParseFxmlController implements Initializable {
     settaProgBar((int) qtaRighe);
     if (m_bLaunchBC)
       lanciaBaseCamp();
-    messageDialog(AlertType.INFORMATION, "Creato il file:" + m_fiOut.getAbsolutePath() // 
+    messageDialog(AlertType.INFORMATION, "Creato il file:" + m_fiOut.getAbsolutePath() //
         + "\nricordati di **ri-calcolare** in BaseCamp il nuovo percorso !");
   }
 
@@ -351,7 +392,8 @@ public class GpxParseFxmlController implements Initializable {
   }
 
   private long contaRighe(File p_fi) {
-    @SuppressWarnings("unused") String riga = null;
+    @SuppressWarnings("unused")
+    String riga = null;
     long result = 0;
     try (FileReader input = new FileReader(p_fi); LineNumberReader count = new LineNumberReader(input);) {
       while ( (riga = count.readLine()) != null) {

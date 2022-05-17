@@ -18,12 +18,11 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class XmlHandler extends DefaultHandler {
 
-  @SuppressWarnings("unused")
-  private static final Logger s_log = LogManager.getLogger(XmlHandler.class);
+  @SuppressWarnings("unused") private static final Logger s_log = LogManager.getLogger(XmlHandler.class);
 
-  private LinkedList<String>  m_stack;
-  private List<String>        m_liXpaths;
-  private String              m_txChars;
+  private LinkedList<String>                              m_stack;
+  private List<String>                                    m_liXpaths;
+  private String                                          m_txChars;
 
   public XmlHandler() {
     init();
@@ -57,7 +56,7 @@ public class XmlHandler extends DefaultHandler {
     String szXp = getXpath();
     if ( !m_liXpaths.contains(szXp))
       m_liXpaths.add(szXp);
-    Map<String, String> attrs = parseAttributes(attributes);
+    @SuppressWarnings("unused") Map<String, String> attrs = parseAttributes(attributes);
 
   }
 

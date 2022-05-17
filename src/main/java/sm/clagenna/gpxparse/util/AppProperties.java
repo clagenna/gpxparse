@@ -24,6 +24,10 @@ public class AppProperties {
 
   @Getter @Setter private Properties properties;
   @Getter @Setter private File       propertyFile;
+  @Getter @Setter private ETipoWP    tipoWp;
+  @Getter @Setter private boolean    lanciaBaseCamp;
+  @Getter @Setter private File       gpxIn;
+  @Getter @Setter private File       gpxOut;
 
   public AppProperties() {
     if (AppProperties.s_inst != null)
@@ -127,7 +131,7 @@ public class AppProperties {
   }
 
   public void setKmMin(Integer p_kmMin) {
-    setPropVal(CSZ_PROP_LASTDIR, String.valueOf(p_kmMin));
+    setPropVal(CSZ_PROP_KMMIN, String.valueOf(p_kmMin));
   }
 
 }

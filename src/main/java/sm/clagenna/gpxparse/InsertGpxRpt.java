@@ -10,13 +10,19 @@ import java.util.regex.Pattern;
 
 import javafx.concurrent.Task;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import lombok.Getter;
 import lombok.Setter;
 import sm.clagenna.gpxparse.javafx.GpxParseFxmlController;
 import sm.clagenna.gpxparse.swing.MainFrame;
+import sm.clagenna.gpxparse.util.AppProperties;
+import sm.clagenna.gpxparse.util.ETipoWP;
 import sm.clagenna.gpxparse.util.Punto;
 
 public class InsertGpxRpt extends Task<Void> {
+  private static final Logger s_log             = LogManager.getLogger(InsertGpxRpt.class);
 
   private static final String CSZ_ENDGPXX       = "</gpxx:rpt>";
   private static final String CSZ_INNESTO       =                                                                         //
@@ -31,7 +37,7 @@ public class InsertGpxRpt extends Task<Void> {
           + "            <trp:ShapingPoint />\r\n"                                                                        //
           + "            <gpxx:RoutePointExtension>\r\n";
 
-  private static final String CSZ_INNESTO_VIAPT =                                                                         //  
+  private static final String CSZ_INNESTO_VIAPT =                                                                         //
       "        </gpxx:RoutePointExtension>\r\n"                                                                           //
           + "      </extensions>\r\n"                                                                                     //
           + "    </rtept>\r\n"                                                                                            //
@@ -89,6 +95,10 @@ public class InsertGpxRpt extends Task<Void> {
     setTipowp(ETipoWP.ShapingPoint);
   }
 
+  public InsertGpxRpt(AppProperties p_prop) {
+    setTipowp(p_prop.getTipoWp());
+  }
+
   public void doTheJob(int p_distMin, File p_fiIn, File p_fiOut) {
     metriMin = p_distMin;
     fileIn = p_fiIn;
@@ -97,16 +107,16 @@ public class InsertGpxRpt extends Task<Void> {
   }
 
   public void doTheJob() {
-    System.out.println("InsertGpxRpt.doTheJob() TipoWP=" + tipowp);
+    s_log.info("InsertGpxRpt.doTheJob(\"{}\") TipoWP={} ogni {}m", fileIn.getAbsolutePath(), tipowp, metriMin);
     m_refPunto = null;
     String riga = null;
     int qtaRighe = 1;
     Lavoro curr = Lavoro.scriviRiga;
     m_ptClaudio = 1;
-    System.out.printf("Genero %s\n", fileOut.getAbsolutePath());
+    s_log.info("Genero {}", fileOut.getAbsolutePath());
     try (PrintWriter prt = new PrintWriter(fileOut)) {
       try (BufferedReader bur = new BufferedReader(new FileReader(fileIn))) {
-        System.out.println("Aperto " + fileIn.getAbsolutePath());
+        s_log.debug("Aperto " + fileIn.getAbsolutePath());
         while ( (riga = bur.readLine()) != null) {
           boolean bMtch = false;
           if ( (qtaRighe++ % 13) == 0) {
@@ -182,9 +192,9 @@ public class InsertGpxRpt extends Task<Void> {
 
         }
       }
-      System.out.println("Scritto il file:" + fileOut.getAbsolutePath());
+      s_log.debug("Scritto il file:" + fileOut.getAbsolutePath());
     } catch (Exception e) {
-      e.printStackTrace();
+      s_log.error(e.getMessage());
     }
   }
 
