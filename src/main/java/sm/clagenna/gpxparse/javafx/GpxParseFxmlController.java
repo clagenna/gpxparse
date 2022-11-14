@@ -168,12 +168,14 @@ public class GpxParseFxmlController implements Initializable {
       try {
         m_fiOut = AppUtils.creaFileOut(fileScelto);
         txGpxOut.setText(m_fiOut.getAbsolutePath());
+        chekDati();
       } catch (GpxException e) {
         messageDialog(AlertType.ERROR, e.getMessage());
       }
 
     } else {
       System.out.println("Non hai scelto nulla !!");
+      messageDialog(AlertType.WARNING, "Non hai scelto nessun file!");
     }
   }
 
@@ -258,7 +260,7 @@ public class GpxParseFxmlController implements Initializable {
     if (p_setTx)
       txGpxIn.setText(p_fi.getAbsolutePath());
     m_fiIn = p_fi;
-    // chekDati();
+    chekDati();
     return p_fi;
   }
 

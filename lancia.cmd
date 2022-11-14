@@ -3,6 +3,13 @@ cd /d "%LUOGO%"
 cd
 set qta=0
 
+set JARTEST=target\gpxparse-1.0-SNAPSHOT.jar
+if exist "%JARTEST%" (
+  set JAREXE=%JARTEST%
+  call :info  "%JARTEST%"
+  set /a qta=%qta%+1
+  )
+
 set JARTEST=target\gpxparse-jar-with-dependencies.jar
 if exist "%JARTEST%" (
   set JAREXE=%JARTEST%

@@ -4,7 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>sm.clagenna</groupId>
 	<artifactId>gpxparse</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
+	
+	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClassName>sm.clagenna.gpxparse.javafx.GpxParseMainApp</mainClassName>
@@ -12,7 +14,8 @@
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 		<java.version>17</java.version>
-		<javafx.version>16</javafx.version>
+	<!--	<javafx.version>16</javafx.version> -->
+		<javafx.version>20-ea+7</javafx.version>
 		<lombok.version>1.18.22</lombok.version>
 	</properties>
 	<dependencies>
@@ -100,7 +103,7 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
-					<finalName>gpxparse</finalName>
+					<finalName>gpxparse-${project.version}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
