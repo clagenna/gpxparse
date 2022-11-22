@@ -127,9 +127,10 @@ public class GpxParseFxmlController implements Initializable {
 
       @Override
       public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        testNumerico(observable, oldValue, newValue);
+        testKmMinIsNumerico(observable, oldValue, newValue);
       }
     });
+    txKmMin.focusedProperty().addListener((obs, oldval, newval) -> { if ( !newval ) txKmMinLostFocus();});
 
     Stage mainstage = GpxParseMainApp.getInst().getPrimaryStage();
     InputStream stre = getClass().getResourceAsStream(IMAGE_EDITING_ICO);
@@ -208,17 +209,22 @@ public class GpxParseFxmlController implements Initializable {
     }
   }
 
-  protected void testNumerico(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-    //    System.out.println("testNumerico(): old=" + oldValue);
-    //    System.out.println("testNumerico(): new=" + newValue);
+  protected void testKmMinIsNumerico(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+    // System.out.printf("testKmMinIsNumerico(old=%s, new=%s)\n", oldValue, newValue);
     if ( !newValue.matches("\\d*(\\.\\d*)*")) {
       txKmMin.setText(oldValue);
-    }
+    } 
+  }
+  
+  private void txKmMinLostFocus() {
+    System.out.println("txKmMin\tLostFocus()");
+    onEnterKmMin(null);
   }
 
   @FXML
   void onEnterKmMin(ActionEvent event) {
     String szKm = txKmMin.getText();
+    System.out.printf("onEnterKmMin(kmMin=%s)\n", szKm);
     if (szKm == null || szKm.length() < 2)
       return;
 
@@ -433,7 +439,7 @@ public class GpxParseFxmlController implements Initializable {
     bOk &= (m_fiOut != null);
     if ( !bOk)
       System.out.println("non ho file out");
-    bOk &= (m_nMinKm >= 500 && m_nMinKm <= 5000);
+    bOk &= (m_nMinKm >= N_METRIMIN && m_nMinKm <= N_METRIMAX);
     if ( !bOk)
       System.out.println("Min Km non e valido");
     btSalva.setDisable( !bOk);
