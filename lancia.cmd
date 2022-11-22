@@ -2,6 +2,11 @@ set LUOGO=%~dp0
 cd /d "%LUOGO%"
 cd
 set qta=0
+if "%JAVAFX_HOME%" == "" (
+  call :errore "Non ha definito la variabile ambiente JAVAFX_HOME !"
+  call :errore "Prova a lanciare settaEnvJava.ps1 come amministratore"
+  goto fine
+)
 
 set JARTEST=target\gpxparse-1.0.jar
 if exist "%JARTEST%" (
@@ -45,6 +50,13 @@ if exist "%JARTEST%" (
   set /a qta=%qta%+1
   )
 
+set JARTEST=gpxparse-1.0.jar
+if exist "%JARTEST%" (
+  set JAREXE=%JARTEST%
+  call :info  "%JARTEST%"
+  set /a qta=%qta%+1
+  )
+
 if %qta% equ 0 (
   @echo.
   call :errore Non trovo il *.JAR del programma ?!?
@@ -73,7 +85,7 @@ goto :eof
 
 :vai
 @echo on
-set MODPATH=C:\Program Files\javafx-sdk-17.0.1\lib
+set MODPATH=%JAVAFX_HOME%\lib
 set MODS=javafx.controls
 set MODS=%MODS%,javafx.base
 set MODS=%MODS%,javafx.fxml
@@ -81,3 +93,5 @@ set MODS=%MODS%,javafx.graphics
 rem set MODS=%MODS%,javafx.media
 
 java --module-path "%MODPATH%" --add-modules="%MODS%" -jar "%JAREXE%"
+
+:fine
