@@ -51,30 +51,19 @@ public class GpxParseFxmlController implements Initializable {
   private static String              IMAGE_EDITING_ICO = "basecamp.ico";
   private static final DecimalFormat s_fmt             = new DecimalFormat("#,##0");
 
-  @FXML
-  private TextField                  txGpxIn;
-  @FXML
-  private TextField                  txKmMin;
-  @FXML
-  private TextField                  txGpxOut;
-  @FXML
-  private JFXButton                  btCercaGpx;
-  @FXML
-  private CheckBox                   ckLanciaBaseCamp;
-  @FXML
-  private ChoiceBox<ETipoWP>         cbTipoWp;
-  @FXML
-  private JFXButton                  btSalva;
-  @FXML
-  private Label                      lbProgrBar;
+  @FXML private TextField            txGpxIn;
+  @FXML private TextField            txKmMin;
+  @FXML private TextField            txGpxOut;
+  @FXML private JFXButton            btCercaGpx;
+  @FXML private CheckBox             ckLanciaBaseCamp;
+  @FXML private ChoiceBox<ETipoWP>   cbTipoWp;
+  @FXML private JFXButton            btSalva;
+  @FXML private Label                lbProgrBar;
   private double                     qtaRighe;
   // private double             progress;
-  @FXML
-  private ProgressBar                progBar;
+  @FXML private ProgressBar          progBar;
 
-  @Getter
-  @Setter
-  private File                       lastDir;
+  @Getter @Setter private File       lastDir;
   private File                       m_fiIn;
   private File                       m_fiOut;
   private int                        m_nMinKm;
@@ -130,7 +119,10 @@ public class GpxParseFxmlController implements Initializable {
         testKmMinIsNumerico(observable, oldValue, newValue);
       }
     });
-    txKmMin.focusedProperty().addListener((obs, oldval, newval) -> { if ( !newval ) txKmMinLostFocus();});
+    txKmMin.focusedProperty().addListener((obs, oldval, newval) -> {
+      if ( !newval)
+        txKmMinLostFocus();
+    });
 
     Stage mainstage = GpxParseMainApp.getInst().getPrimaryStage();
     InputStream stre = getClass().getResourceAsStream(IMAGE_EDITING_ICO);
@@ -213,18 +205,18 @@ public class GpxParseFxmlController implements Initializable {
     // System.out.printf("testKmMinIsNumerico(old=%s, new=%s)\n", oldValue, newValue);
     if ( !newValue.matches("\\d*(\\.\\d*)*")) {
       txKmMin.setText(oldValue);
-    } 
+    }
   }
-  
+
   private void txKmMinLostFocus() {
-    System.out.println("txKmMin\tLostFocus()");
+    // System.out.println("txKmMin\tLostFocus()");
     onEnterKmMin(null);
   }
 
   @FXML
   void onEnterKmMin(ActionEvent event) {
     String szKm = txKmMin.getText();
-    System.out.printf("onEnterKmMin(kmMin=%s)\n", szKm);
+    // System.out.printf("onEnterKmMin(kmMin=%s)\n", szKm);
     if (szKm == null || szKm.length() < 2)
       return;
 
@@ -277,6 +269,7 @@ public class GpxParseFxmlController implements Initializable {
       txKmMin.setText(sz);
     } else {
       String sz = String.format("I metri devono stare entro i %d min e %d max ", N_METRIMIN, N_METRIMAX);
+      txKmMin.setText("2.000");
       messageDialog(AlertType.WARNING, sz);
     }
   }
@@ -400,8 +393,7 @@ public class GpxParseFxmlController implements Initializable {
   }
 
   private long contaRighe(File p_fi) {
-    @SuppressWarnings("unused")
-    String riga = null;
+    @SuppressWarnings("unused") String riga = null;
     long result = 0;
     try (FileReader input = new FileReader(p_fi); LineNumberReader count = new LineNumberReader(input);) {
       while ( (riga = count.readLine()) != null) {
@@ -433,15 +425,19 @@ public class GpxParseFxmlController implements Initializable {
 
   private void chekDati() {
     boolean bOk = true;
-    bOk &= (m_fiIn != null && m_fiIn.exists());
-    if ( !bOk)
-      System.out.println("file in non esiste");
-    bOk &= (m_fiOut != null);
-    if ( !bOk)
+    boolean b2;
+    b2 = (m_nMinKm >= N_METRIMIN && m_nMinKm <= N_METRIMAX);
+    if ( !b2)
+      System.out.printf("Min Km \"%s\" non e valido\n", m_nMinKm);
+    bOk &= b2;
+    b2 = (m_fiIn != null && m_fiIn.exists());
+    if ( !b2)
+      System.out.printf("file \"%s\" non esiste\n", m_fiIn);
+    bOk &= b2;
+    b2 = (m_fiOut != null);
+    if ( !b2)
       System.out.println("non ho file out");
-    bOk &= (m_nMinKm >= N_METRIMIN && m_nMinKm <= N_METRIMAX);
-    if ( !bOk)
-      System.out.println("Min Km non e valido");
+    bOk &= b2;
     btSalva.setDisable( !bOk);
   }
 
