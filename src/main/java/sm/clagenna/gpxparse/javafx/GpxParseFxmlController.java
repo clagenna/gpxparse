@@ -73,6 +73,19 @@ public class GpxParseFxmlController implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     AppProperties prop = AppProperties.getInst();
+
+    txGpxIn.focusedProperty().addListener(new ChangeListener<Boolean>() {
+      @Override
+      public void changed(ObservableValue<? extends Boolean> p_observable, Boolean p_oldValue, Boolean p_newValue) {
+        String sz = txGpxIn.getText();
+        System.out.printf("txGpxIn.focus=%s\ttext=%s\n", p_newValue, sz);
+        if ( !p_newValue) {
+          if (sz != null && sz.length() > 2)
+            onEnterFileIn(null);
+        }
+      }
+    });
+
     m_tipowp = ETipoWP.ShapingPoint;
     cbTipoWp.getItems().addAll(ETipoWP.values());
     cbTipoWp.getSelectionModel().select(m_tipowp);
@@ -81,28 +94,13 @@ public class GpxParseFxmlController implements Initializable {
       public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
         ETipoWP wp = ETipoWP.values()[newValue.intValue()];
         m_tipowp = wp;
-        try {
-          m_fiOut = AppUtils.creaFileOut(m_fiIn);
-          txGpxOut.setText(m_fiOut.getAbsolutePath());
-        } catch (GpxException e) {
-          messageDialog(AlertType.ERROR, e.getMessage());
-        }
+        creaFileOut(m_fiIn);
       }
     });
 
     String sz = prop.getLastDir();
     if (sz != null)
       setLastDir(new File(sz));
-
-    //    if (sz != null) {
-    //      settaFileIn(new File(sz));
-    //      try {
-    //        m_fiOut = AppUtils.creaFileOut(m_fiIn);
-    //        txGpxOut.setText(m_fiOut.getAbsolutePath());
-    //      } catch (GpxException e) {
-    //        messageDialog(AlertType.ERROR, e.getMessage());
-    //      }
-    //    }
     m_bLaunchBC = false;
     Integer k = prop.getKmMin();
     if (k != null && k > 0)
@@ -111,7 +109,7 @@ public class GpxParseFxmlController implements Initializable {
       settaKmMin(1500);
     // txKmMin.setText(String.valueOf(m_nMinKm));
 
-    chekDati();
+    checkDati();
     txKmMin.textProperty().addListener(new ChangeListener<String>() {
 
       @Override
@@ -122,6 +120,21 @@ public class GpxParseFxmlController implements Initializable {
     txKmMin.focusedProperty().addListener((obs, oldval, newval) -> {
       if ( !newval)
         txKmMinLostFocus();
+    });
+
+    txGpxOut.focusedProperty().addListener(new ChangeListener<Boolean>() {
+
+      @Override
+      public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+        if ( !newValue) {
+          String sz = txGpxOut.getText();
+          if (sz != null && sz.length() > 3) {
+            m_fiOut = new File(sz);
+            checkDati();
+            System.out.printf("fiOut=%s\n", sz);
+          }
+        }
+      }
     });
 
     Stage mainstage = GpxParseMainApp.getInst().getPrimaryStage();
@@ -157,14 +170,8 @@ public class GpxParseFxmlController implements Initializable {
       setLastDir(new File(lastDir));
       props.setLastDir(lastDir);
       fileScelto = settaFileIn(fileScelto);
-      // creaFileOut(fileScelto);
-      try {
-        m_fiOut = AppUtils.creaFileOut(fileScelto);
-        txGpxOut.setText(m_fiOut.getAbsolutePath());
-        chekDati();
-      } catch (GpxException e) {
-        messageDialog(AlertType.ERROR, e.getMessage());
-      }
+      creaFileOut(fileScelto);
+      checkDati();
 
     } else {
       System.out.println("Non hai scelto nulla !!");
@@ -191,13 +198,7 @@ public class GpxParseFxmlController implements Initializable {
     }
     if (fi != null) {
       settaFileIn(fi);
-      // creaFileOut(fi);
-      try {
-        m_fiOut = AppUtils.creaFileOut(fi);
-        txGpxOut.setText(m_fiOut.getAbsolutePath());
-      } catch (GpxException e) {
-        messageDialog(AlertType.ERROR, e.getMessage());
-      }
+      creaFileOut(fi);
     }
   }
 
@@ -224,7 +225,7 @@ public class GpxParseFxmlController implements Initializable {
       szKm = szKm.replace(".", "");
       Integer ii = Integer.parseInt(szKm);
       settaKmMin(ii);
-      chekDati();
+      checkDati();
     } catch (Exception e) {
       messageDialog(AlertType.ERROR, e.getMessage());
     }
@@ -258,7 +259,8 @@ public class GpxParseFxmlController implements Initializable {
     if (p_setTx)
       txGpxIn.setText(p_fi.getAbsolutePath());
     m_fiIn = p_fi;
-    chekDati();
+    creaFileOut(m_fiIn);
+    checkDati();
     return p_fi;
   }
 
@@ -272,6 +274,22 @@ public class GpxParseFxmlController implements Initializable {
       txKmMin.setText("2.000");
       messageDialog(AlertType.WARNING, sz);
     }
+  }
+
+  private void creaFileOut(File p_fiIn) {
+    try {
+      m_fiOut = AppUtils.creaFileOut(m_fiIn);
+      settaFileOut();
+    } catch (GpxException e) {
+      messageDialog(AlertType.ERROR, e.getMessage());
+    }
+  }
+
+  private void settaFileOut() {
+    String sz = "";
+    if (m_fiOut != null)
+      sz = m_fiOut.getAbsolutePath();
+    txGpxOut.setText(sz);
   }
 
   private void messageDialog(AlertType typ, String p_msg) {
@@ -295,37 +313,6 @@ public class GpxParseFxmlController implements Initializable {
     alert.setContentText(p_msg);
     alert.showAndWait();
   }
-  //
-  //  private void creaFileOut(File p_fiIn) {
-  //    String szFiOu = p_fiIn.getAbsolutePath();
-  //    int n = szFiOu.lastIndexOf(".");
-  //    if (n < 1) {
-  //      System.out.println("Non trovo il suffisso GPX" + szFiOu);
-  //      System.exit(1957);
-  //    }
-  //    String szExt = szFiOu.substring(n + 1);
-  //    if (szExt == null || !szExt.toLowerCase().equals("gpx")) {
-  //      String szMsg = "Non è un file GPX: " + szFiOu;
-  //      messageDialog(AlertType.ERROR, szMsg);
-  //      return;
-  //    }
-  //    szFiOu = szFiOu.substring(0, n);
-  //    String sufx = "";
-  //    switch (m_tipowp) {
-  //      case ShapingPoint:
-  //        sufx = "_SHAPWP.gpx";
-  //        break;
-  //      case ViaPoint:
-  //        sufx = "_VIAWP.gpx";
-  //        break;
-  //    }
-  //    m_fiOut = new File(szFiOu + sufx);
-  //    int k = 1;
-  //    while (m_fiOut.exists()) {
-  //      m_fiOut = new File(szFiOu + "_" + k++ + sufx);
-  //    }
-  //    txGpxOut.setText(m_fiOut.getAbsolutePath());
-  //  }
 
   @FXML
   public void onEnter(ActionEvent ae) {
@@ -423,7 +410,7 @@ public class GpxParseFxmlController implements Initializable {
     }
   }
 
-  private void chekDati() {
+  private void checkDati() {
     boolean bOk = true;
     boolean b2;
     b2 = (m_nMinKm >= N_METRIMIN && m_nMinKm <= N_METRIMAX);

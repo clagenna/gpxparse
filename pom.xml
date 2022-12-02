@@ -1,12 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>sm.clagenna</groupId>
 	<artifactId>gpxparse</artifactId>
 	<version>1.0</version>
-	
-	
+
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClassName>sm.clagenna.gpxparse.javafx.GpxParseMainApp</mainClassName>
@@ -14,9 +12,10 @@
 		<maven.compiler.source>17</maven.compiler.source>
 		<maven.compiler.target>17</maven.compiler.target>
 		<java.version>17</java.version>
-	<!--	<javafx.version>16</javafx.version> -->
+		<!--	<javafx.version>16</javafx.version> -->
 		<javafx.version>20-ea+7</javafx.version>
 		<lombok.version>1.18.22</lombok.version>
+		<gdrive.dir>F:/Google Drive/Util/java</gdrive.dir>
 	</properties>
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/org.openjfx/javafx -->
@@ -184,6 +183,27 @@
 					<mainClass>${mainClassName}</mainClass>
 				</configuration>
 			</plugin>
+
+
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<copy file="target/gpxparse-1.0.jar" toDir="${gdrive.dir}" overwrite="true" />
+								<copy file="gpxparse.cmd" toDir="${gdrive.dir}" overwrite="true" />
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 
 		</plugins>
 	</build>
