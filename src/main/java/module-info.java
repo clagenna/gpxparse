@@ -20,6 +20,7 @@ module gpxparse {
   requires org.apache.logging.log4j;
   requires commons.cli;
 
+
   opens sm.clagenna.gpxparse.javafx to javafx.fxml;
 
 }
