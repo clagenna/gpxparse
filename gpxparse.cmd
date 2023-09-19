@@ -92,6 +92,6 @@ set MODS=%MODS%,javafx.fxml
 set MODS=%MODS%,javafx.graphics
 rem set MODS=%MODS%,javafx.media
 
-java --module-path "%MODPATH%" --add-modules="%MODS%" -jar "%JAREXE%"
+echo java --module-path "%MODPATH%" --add-modules="%MODS%" -jar "%JAREXE%"
 
 :fine

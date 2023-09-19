@@ -45,7 +45,7 @@ public class Punto implements Serializable {
 
   /** eath radius at equator ( in meter) */
   @SuppressWarnings("unused") private static double s_earthRadius_equa = 6_378_100F;
-  @SuppressWarnings("unused") private static double s_earthRadius_mean = 6_371_008.7714F;
+  private static double s_earthRadius_mean = 6_371_008.7714F;
   @SuppressWarnings("unused") private static double s_earthRadius_pola = 6_356_800F;
 
   private static final Map<EGpxFmt, Pattern>        s_map;
